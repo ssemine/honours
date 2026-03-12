@@ -50,8 +50,18 @@ if [[ -n "$chr" ]]; then
 		--out "$out_befile"
 	befile="$out_befile"
 fi
-osca \
-	--befile "$befile" \
-	--make-orm \
-	--orm-alg "$orm_alg" \
-	--out "$out_trm"
+
+if [[ -n "$trm_cutoff" ]]; then
+	osca \
+		--befile "$befile" \
+		--make-orm \
+		--orm-alg "$orm_alg" \
+		--orm-cutoff "$trm_cutoff" \
+		--out "$out_trm"
+else
+	osca \
+		--befile "$befile" \
+		--make-orm \
+		--orm-alg "$orm_alg" \
+		--out "$out_trm"
+fi
