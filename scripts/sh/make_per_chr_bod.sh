@@ -5,6 +5,35 @@ source "$OSCA_CONF"
 
 module load "$OSCA_MODULE"
 
-for n in {1..29}; do
-	osca --befile "$GENE_EXP_FILTERED_AUTOSOME_AFC_DATA" --chr $n --make-bod --out "$GENE_EXP_DIR/chr${n}_$GENE_EXP_FILTERED_AUTOSOME_AFC_FILENAME"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+		--befile)
+			befile="$2"
+			shift 2
+			;;
+		--orm-alg)
+			orm_alg="$2"
+			shift 2
+			;;
+		--out-trm)
+			out_trm="$2"
+			shift 2
+			;;
+		--out-bod)
+			out_bod="$2"
+			shift 2
+			;;
+		--n-chr)
+			n_chr="$2"
+			shift 2
+			;;
+		*)
+			echo "Unknown argument: $1"
+			exit 1
+			;;
+    esac
+done
+
+for n in {1..$n_chr}; do
+	osca --befile "$befile" --chr $n --make-bod --out "$(dirname "$out_bod")/chr${n}_$(basename "$out_bod")"
 done

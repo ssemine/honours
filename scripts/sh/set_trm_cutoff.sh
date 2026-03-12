@@ -19,10 +19,10 @@ while [[ $# -gt 0 ]]; do
             trm_cutoff="$2"
             shift 2
             ;;
-	--trm-dir)
-	    trm_dir="$2"
-	    shift 2
-	    ;;
+	    --trm-dir)
+	        trm_dir="$2"
+	        shift 2
+	        ;;
         *)
             echo "Unknown argument: $1"
             exit 1
