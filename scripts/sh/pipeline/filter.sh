@@ -9,14 +9,14 @@ source "$PHENO_CONF"
 pheno_prefix="afc_"
 
 echo "Running exclude_sex_chr.sh ..."
-../utils/exclude_sex_chr.sh \
+/home/s4693165/honours/scripts/sh/utils/exclude_sex_chr.sh \
     --befile "$GENE_EXP_DATA" \
     --opi "$GENE_EXP_OPI_DATA" \
     --out-gene-list "$GENE_EXP_AUTO_GENE_LIST" \
     --out-bod "$GENE_EXP_AUTO_DATA"
 
 echo "Running filter_bod_pheno.sh ..."
-../utils/filter_bod_pheno.sh \
+/home/s4693165/honours/scripts/sh/utils/filter_bod_pheno.sh \
     --pheno-map "$PHENO_MAP" \
     --pheno-file "$PHENO_DATA" \
     --befile "$GENE_EXP_AUTO_DATA" \
@@ -26,7 +26,7 @@ echo "Running filter_bod_pheno.sh ..."
     --out-pheno "$PHENO_FILTERED_DATA"
 
 echo "Running filter_bod_na_pheno.sh ..."
-../utils/filter_bod_na_pheno.sh \
+/home/s4693165/honours/scripts/sh/utils/filter_bod_na_pheno.sh \
     --pheno-idx "$CALVING_SUCCESS_IDX" \
     --pheno-map "$PHENO_MAP" \
     --pheno-file "$PHENO_FILTERED_DATA" \
@@ -35,7 +35,7 @@ echo "Running filter_bod_na_pheno.sh ..."
     --out-bod "$GENE_EXP_FILTERED_DATA"
 
 echo "Running map_iid_pheno.sh ..."
-../map_iid_pheno.sh \
+/home/s4693165/honours/scripts/sh/utils/map_iid_pheno.sh \
     --pheno-map "$PHENO_MAP" \
     --pheno-file "$PHENO_FILTERED_DATA" \
     --oii "$GENE_EXP_FILTERED_OII_DATA" \
