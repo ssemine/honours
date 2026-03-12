@@ -15,7 +15,7 @@ echo "Running exclude_sex_chr.sh ..."
 
 echo "Running filter_bod_pheno.sh ..."
 /home/s4693165/honours/scripts/sh/utils/filter_bod_pheno.sh \
-    --pheno-map "$PHENO_MAP" \
+    --pheno-map "$PHENO_MAP_DATA" \
     --pheno-file "$PHENO_DATA" \
     --befile "$GENE_EXP_AUTO_DATA" \
     --excl-iids "$EXCL_IIDS_ONE" \
