@@ -2,7 +2,6 @@
 
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
-source "$PHENO_CONF"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
