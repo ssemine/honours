@@ -54,4 +54,8 @@ gawk \
 	"$pheno_map" \
 	"$pheno_file"
 
-osca --befile "$befile" --remove "$excl_iids" --make-bod --out "$out_bod"
+osca \
+	--befile "$befile" \
+	--remove "$excl_iids" \
+	--make-bod \
+	--out "$out_bod"

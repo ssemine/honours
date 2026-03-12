@@ -34,6 +34,11 @@ gawk \
 	-f "$AWK_SCRIPTS_DIR/exclude_sex_chr.awk" \
 	"$opi" \
 	> "$out_gene_list"
-osca --befile "$befile" --genes "$out_gene_list" --make-bod --out "$out_bod"
+
+osca \
+	--befile "$befile" \
+	--genes "$out_gene_list" \
+	--make-bod \
+	--out "$out_bod"
 
 

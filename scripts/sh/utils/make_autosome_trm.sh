@@ -29,4 +29,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-osca --befile "$befile" --make-orm --orm-alg "$orm_alg" --out "$out_trm"
+osca \
+	--befile "$befile" \
+	--make-orm \
+	--orm-alg "$orm_alg" \
+	--out "$out_trm"

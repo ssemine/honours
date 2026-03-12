@@ -19,10 +19,10 @@ while [[ $# -gt 0 ]]; do
             trm_cutoff="$2"
             shift 2
             ;;
-	    --trm-dir)
-	        trm_dir="$2"
-	        shift 2
-	        ;;
+        --out-trm)
+            out_trm="$2"
+            shift 2
+            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -30,7 +30,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-osca --orm "$trm_dir/$trm" \
-     --orm-cutoff "$trm_cutoff" \
-     --make-orm \
-     --out "$trm_dir/cut_${trm_cutoff}_$trm"
+osca \
+    --orm "$trm" \
+    --orm-cutoff "$trm_cutoff" \
+    --make-orm \
+    --out "$(dirname "$out_trm")/cut${trm_cutoff}_$(basename "$out_trm")"

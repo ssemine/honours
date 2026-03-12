@@ -19,8 +19,8 @@ while [[ $# -gt 0 ]]; do
 			pheno_file="$2"
 			shift 2
 			;;
-		--out)
-			out="$2"
+		--out-pheno)
+			out_pheno="$2"
 			shift 2
 			;;
 		*)
@@ -35,4 +35,4 @@ gawk \
 	"$pheno_map" \
 	"$oii_file" \
 	"$pheno_file" \
-	> "$out"
+	> "$out_pheno"
