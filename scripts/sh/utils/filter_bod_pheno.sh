@@ -10,9 +10,6 @@ source "$OSCA_CONF"
 
 module load "$OSCA_MODULE"
 
-# temporary
-excl_iids="$GENE_EXP_DIR/excluded_iids.list"
-
 while [[ $# -gt 0 ]]; do
     case "$1" in
 		--pheno-map)
@@ -29,6 +26,10 @@ while [[ $# -gt 0 ]]; do
 			;;
 		--excl-iids)
 			excl_iids="$2"
+			shift 2
+			;;
+		--oii)
+			oii="$2"
 			shift 2
 			;;
 		--out-bod)
@@ -50,7 +51,7 @@ gawk \
 	-v out_pheno="$out_pheno" \
 	-v out_missing="$excl_iids" \
 	-f "$AWK_SCRIPTS_DIR/filter_bod_pheno.awk" \
-	"$GENE_EXP_OII_DATA" \
+	"$oii" \
 	"$pheno_map" \
 	"$pheno_file"
 

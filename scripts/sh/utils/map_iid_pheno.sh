@@ -12,7 +12,7 @@ while [[ $# -gt 0 ]]; do
 			shift 2
 			;;
 		--oii)
-			oii_file="$2"
+			oii="$2"
 			shift 2
 			;;
 		--pheno-file)
@@ -33,6 +33,6 @@ done
 gawk \
 	-f "$AWK_SCRIPTS_DIR/map_iid_pheno.awk" \
 	"$pheno_map" \
-	"$oii_file" \
+	"$oii" \
 	"$pheno_file" \
 	> "$out_pheno"

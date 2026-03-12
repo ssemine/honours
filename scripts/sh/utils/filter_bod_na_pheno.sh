@@ -7,20 +7,8 @@ source "$OSCA_CONF"
 
 module load "$OSCA_MODULE"
 
-# temporary
-pheno_name="afc_"
-pheno_idx=8
-befile="$GENE_EXP_FILTERED_AUTOSOME_DATA"
-excl_iids_filename="excluded_iids.list"
-excl_iids="$GENE_EXP_DIR/$pheno_name$excl_iids_filename"
-output_profile="$GENE_EXP_FILTERED_AUTOSOME_AFC_DATA"
-
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --pheno-prefix)
-            pheno_prefix="$2"
-            shift 2
-            ;;
         --pheno-idx)
             pheno_idx="$2"
             shift 2
