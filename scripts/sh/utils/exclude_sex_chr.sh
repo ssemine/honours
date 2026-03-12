@@ -40,5 +40,3 @@ osca \
 	--genes "$out_gene_list" \
 	--make-bod \
 	--out "$out_bod"
-
-
