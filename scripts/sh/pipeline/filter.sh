@@ -6,8 +6,6 @@
 source /home/s4693165/honours/config/paths.conf
 source "$PHENO_CONF"
 
-pheno_prefix="afc_"
-
 echo "Running exclude_sex_chr.sh ..."
 /home/s4693165/honours/scripts/sh/utils/exclude_sex_chr.sh \
     --befile "$GENE_EXP_DATA" \
