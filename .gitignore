@@ -1,0 +1,8 @@
+# directories
+scripts/slurm/
+logs/
+results/
+data/
+
+# private config
+config/slurm_var.conf
