@@ -6,3 +6,7 @@ data/
 
 # private config
 config/slurm_var.conf
+
+# R files
+scripts/R/.Rdata
+scripts/R/.Rhistory
