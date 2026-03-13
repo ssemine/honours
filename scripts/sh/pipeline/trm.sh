@@ -7,14 +7,14 @@ source "$PHENO_CONF"
 
 # tblup/trm/cuttrm
 echo "Running make_trm.sh for all data ..."
-/home/s4693165/honours/scripts/sh/utils/make_trm.sh \
+"$SH_UTILS_DIR/make_trm.sh" \
         --befile "$GENE_EXP_FILTERED_DATA" \
         --trm-cutoff 1.00 \
         --out-trm "$TRM_DATA"
 
 for chr in {1..29}; do
     echo "Running make_trm.sh for chromosome $chr ..."
-    /home/s4693165/honours/scripts/sh/utils/make_trm.sh \
+    "$SH_UTILS_DIR/make_trm.sh" \
         --befile "$GENE_EXP_FILTERED_DATA" \
         --chr "$chr" \
         --trm-cutoff 1.00 \
