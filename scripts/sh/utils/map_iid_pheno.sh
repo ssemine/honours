@@ -2,6 +2,18 @@
 
 source /home/s4693165/honours/config/paths.conf
 
+# map_iid_pheno.sh
+#
+# Maps IIDs to phenotype file
+#
+# Input arguments:
+#   --pheno-map: Phenotype map file
+#   --oii: BOD .oii file
+#   --pheno-file: Phenotype file
+#   --out-pheno: Output phenotype file
+# Output files:
+#   Mapped phenotype file
+
 # temporary
 oii_file="$GENE_EXP_FILTERED_AUTOSOME_AFC_OII_DATA"
 

@@ -1,9 +1,20 @@
 #!/bin/bash
 
 # filter_bod_pheno.sh
-# 
-# Filters both the BOD .oii and the phenoptype files
-# Usage: ./filter_bod_pheno.sh
+#
+# Filters both the BOD and phenotype files
+#
+# Input arguments:
+#   --pheno-map: Phenotype map file
+#   --pheno-file: Phenotype file
+#   --befile: Input BOD file
+#   --excl-iids: Excluded IIDs file
+#   --oii: BOD .oii file
+#   --out-bod: Output BOD file
+#   --out-pheno: Output phenotype file
+# Output files:
+#   Filtered BOD files (.bod, .opi, .oii)
+#   Filtered phenotype file (.txt)
 
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"

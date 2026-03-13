@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# make_trm.sh
+#
+# Makes TRM files
+#
+# Input arguments:
+#   --befile: Input BOD file
+#   --orm-alg: ORM algorithm (default: 1)
+#   --out-trm: Output ORM (TRM) file
+#   --chr: Chromosome number (optional)
+#   --trm-cutoff: TRM cutoff value (optional)
+# Output files:
+#   ORM (TRM) file (ORM file)
+
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 

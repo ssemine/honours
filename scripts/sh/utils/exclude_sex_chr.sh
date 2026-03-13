@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# exclude_sex_chr.sh
+#
+# Excludes sex chromosomes from BOD files
+#
+# Input arguments:
+#   --befile: Input BOD file
+#   --opi: BOD .opi file
+#   --out-gene-list: Output gene list file
+#   --out-bod: Output BOD file
+# Output files:
+#   Filtered BOD files (.bod, .opi, .oii)
+#   Gene list file (.txt) (Intermeediate)
+
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 

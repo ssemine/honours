@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# get_pca.sh
+#
+# Calculates PCA values
+#
+# Input arguments:
+#   --befile: Input BOD file
+#   --n-pca: Number of PCs
+#   --out-pca: Output PCA file
+# Output files:
+#   PCA files (.eigenvec and .eigenval files)
+
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 

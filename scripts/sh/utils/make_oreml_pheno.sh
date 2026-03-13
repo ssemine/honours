@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# make_oreml_pheno.sh
+#
+# Makes creates .phen file for OREML
+#
+# Input arguments:
+#   --pheno-idx: Phenotype index
+#   --pheno-file: Phenotype file
+#   --iid-idx: IID index
+#   --out-pheno: Output phenotype file
+# Output files:
+#   OREML phenotype file
+
 source /home/s4693165/honours/config/paths.conf
 
 while [[ $# -gt 0 ]]; do

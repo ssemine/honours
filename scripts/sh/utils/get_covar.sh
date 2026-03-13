@@ -1,5 +1,17 @@
 #!/bin/bash
 
+# get_covar.sh
+#
+# Fetches a single covariate from the phenotype file, to be used in OREML
+#
+# Input arguments:
+#   --pheno-file: Phenotype file
+#   --iid-idx: IID index
+#   --covar_idx: Covariate index
+#   --out: Output file
+# Output files:
+#   Covariate file (.covar)
+
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 

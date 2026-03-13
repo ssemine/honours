@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# filter_bod_pheno.sh
+#
+# Filters both the BOD and phenotype files for NA values, specifically AFC
+#
+# Input arguments:
+#   --pheno-idx: Phenotype index
+#   --pheno-map: Phenotype map file
+#   --pheno-file: Phenotype file
+#   --befile: Input BOD file
+#   --excl-iids: Excluded IIDs file
+#   --out-bod: Output BOD file
+# Output files:
+#   Filtered BOD files (.bod, .opi, .oii)
+#   Filtered phenotype file (.txt)
+
 source /home/s4693165/honours/config/paths.conf
 source "$PHENO_CONF"
 source "$BOD_CONF"
