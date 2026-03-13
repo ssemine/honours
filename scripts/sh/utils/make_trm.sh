@@ -59,29 +59,30 @@ if $is_intermediate; then
 	out_trm="$INTERMEDIATE_DIR/$(basename "$out_trm")"
 	out_befile="$INTERMEDIATE_DIR/$(basename "$befile")"
 	mkdir -p "$INTERMEDIATE_DIR"
+	rm -rf "$INTERMEDIATE_DIR"/*
 fi
 
 if [[ -n "$chr" ]]; then
 	# Chromosome-specific TRM
 	if [[ -n "$trm_cutoff" ]]; then
 		if $is_intermediate; then
-			prefix="chr${chr}_cut${trm_cutoff}_"
+			prefix="chr${chr}_cut${trm_cutoff}"
 			mkdir -p "$INTERMEDIATE_DIR/$prefix"
-			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
-			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$out_trm")"
 		else
-			out_befile="$(dirname "$befile")/$prefix\_$(basename "$befile")"
-			out_trm="$(dirname "$out_trm")/$prefix\_${trm_cutoff}_$(basename "$out_trm")"
+			out_befile="$(dirname "$befile")/$prefix"_"$(basename "$befile")"
+			out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
 		fi
 	else
 		if $is_intermediate; then
 			prefix="chr${chr}"
 			mkdir -p "$INTERMEDIATE_DIR/$prefix_"
-			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
-			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$out_trm")"
 		else
-			out_befile="$(dirname "$befile")/$prefix\_$(basename "$befile")"
-			out_trm="$(dirname "$out_trm")/$prefix\_$(basename "$out_trm")"
+			out_befile="$(dirname "$befile")/$prefix"_"$(basename "$befile")"
+			out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
 		fi
 	fi
 	osca \
@@ -94,21 +95,31 @@ else
 	# Autosome TRM 
 	if [[  -n "$trm_cutoff" ]]; then
 		if $is_intermediate; then
-			prefix="cut${trm_cutoff}_"
-			mkdir -p "$INTERMEDIATE_DIR/$prefix"
-			cp "$befile" "$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
-			befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
-			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+			prefix="cut${trm_cutoff}"
+			dest_dir="$INTERMEDIATE_DIR/$prefix"
+			mkdir -p "$dest_dir"
+			for ext in bod oii opi; do
+				src_file="${befile}.${ext}"
+				[[ -f "$src_file" ]] || continue
+				cp "$src_file" "$dest_dir/$prefix"_"$(basename "$befile").${ext}"
+			done
+			befile="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$out_trm")"
 		else
 			out_trm="$(dirname "$out_trm")/$prefix\_$(basename "$out_trm")"
 		fi
 	else
 		if $is_intermediate; then
-			prefix="nocut_"
-			mkdir -p "$INTERMEDIATE_DIR/$prefix"
-			cp "$befile" "$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
-			befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
-			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+			prefix="nocut"
+			dest_dir="$INTERMEDIATE_DIR/$prefix"
+			mkdir -p "$dest_dir"
+			for ext in bod oii opi; do
+				src_file="${befile}.${ext}"
+				[[ -f "$src_file" ]] || continue
+				cp "$src_file" "$dest_dir/$prefix"_"$(basename "$befile").${ext}"
+			done
+			befile="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$out_trm")"
 		else
 			out_trm="$(dirname "$out_trm")/$(basename "$out_trm")"
 		fi
