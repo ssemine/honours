@@ -43,6 +43,6 @@ done
 
 osca \
     --befile "$befile" \
-    --make-std-bod \
     "$std_alg" \
+	--make-bod \
     --out "$out_bod"
