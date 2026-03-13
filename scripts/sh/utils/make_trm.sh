@@ -19,6 +19,8 @@ source "$OSCA_CONF"
 module load "$OSCA_MODULE"
 
 orm_alg="$ORM_ALG_STANDARD"
+intermediate=false
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
 		--befile)
@@ -41,6 +43,10 @@ while [[ $# -gt 0 ]]; do
             trm_cutoff="$2"
             shift 2
             ;;
+		--intermediate)
+			is_intermediate=true
+			shift 1
+			;;
 		*)
 			echo "Unknown argument: $1"
 			exit 1
@@ -48,13 +54,35 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+# Creates intermediate directory
+if $is_intermediate; then
+	out_trm="$INTERMEDIATE_DIR/$(basename "$out_trm")"
+	out_befile="$INTERMEDIATE_DIR/$(basename "$befile")"
+	mkdir -p "$INTERMEDIATE_DIR"
+fi
+
 if [[ -n "$chr" ]]; then
+	# Chromosome-specific TRM
 	if [[ -n "$trm_cutoff" ]]; then
-		out_befile="$(dirname "$befile")/chr${chr}_cut${trm_cutoff}_$(basename "$befile")"
-		out_trm="$(dirname "$out_trm")/chr${chr}_cut${trm_cutoff}_$(basename "$out_trm")"
+		if $is_intermediate; then
+			prefix="chr${chr}_cut${trm_cutoff}_"
+			mkdir -p "$INTERMEDIATE_DIR/$prefix"
+			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+		else
+			out_befile="$(dirname "$befile")/$prefix\_$(basename "$befile")"
+			out_trm="$(dirname "$out_trm")/$prefix\_${trm_cutoff}_$(basename "$out_trm")"
+		fi
 	else
-		out_befile="$(dirname "$befile")/chr${chr}_$(basename "$befile")"
-		out_trm="$(dirname "$out_trm")/chr${chr}_$(basename "$out_trm")"
+		if $is_intermediate; then
+			prefix="chr${chr}"
+			mkdir -p "$INTERMEDIATE_DIR/$prefix_"
+			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+		else
+			out_befile="$(dirname "$befile")/$prefix\_$(basename "$befile")"
+			out_trm="$(dirname "$out_trm")/$prefix\_$(basename "$out_trm")"
+		fi
 	fi
 	osca \
 		--befile "$befile" \
@@ -62,10 +90,32 @@ if [[ -n "$chr" ]]; then
 		--make-bod \
 		--out "$out_befile"
 	befile="$out_befile"
+else
+	# Autosome TRM 
+	if [[  -n "$trm_cutoff" ]]; then
+		if $is_intermediate; then
+			prefix="cut${trm_cutoff}_"
+			mkdir -p "$INTERMEDIATE_DIR/$prefix"
+			cp "$befile" "$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
+			befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+		else
+			out_trm="$(dirname "$out_trm")/$prefix\_$(basename "$out_trm")"
+		fi
+	else
+		if $is_intermediate; then
+			prefix="nocut_"
+			mkdir -p "$INTERMEDIATE_DIR/$prefix"
+			cp "$befile" "$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
+			befile="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$befile")"
+			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix\_$(basename "$out_trm")"
+		else
+			out_trm="$(dirname "$out_trm")/$(basename "$out_trm")"
+		fi
+	fi
 fi
 
 if [[ -n "$trm_cutoff" ]]; then
-	touch "$TBLUP_TRM_DIR/SUCCESS"
 	osca \
 		--befile "$befile" \
 		--make-orm \
