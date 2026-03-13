@@ -8,7 +8,7 @@ for n in {1..4}; do
     /home/s4693165/honours/scripts/sh/utils/get_pca.sh \
         --n-pca "$n" \
         --befile "$GENE_EXP_FILTERED_DATA" \
-        --out-pca out_befile="$(dirname "$PCA_DATA")/$(basename "$PCA_DATA")_${n}"
+        --out-pca "$(dirname "$PCA_DATA")/$(basename "$PCA_DATA")_${n}"
 done
 
 /home/s4693165/honours/scripts/sh/utils/get_covar.sh \
