@@ -31,7 +31,7 @@ while [[ $# -gt 0 ]]; do
 			shift 2
 			;;
 		--out-bod)
-			out_trm="$2"
+			out_bod="$2"
 			shift 2
 			;;
 		*)
