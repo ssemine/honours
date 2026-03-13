@@ -1,5 +1,7 @@
 #!/bin/bash
 
+shopt -s extglob nullglob # needed for regex
+
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 source "$R_CONF"
