@@ -65,6 +65,7 @@ if [[ -n "$chr" ]]; then
 fi
 
 if [[ -n "$trm_cutoff" ]]; then
+	touch "$TBLUP_TRM_DIR/SUCCESS"
 	osca \
 		--befile "$befile" \
 		--make-orm \
