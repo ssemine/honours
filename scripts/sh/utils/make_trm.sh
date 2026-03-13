@@ -58,7 +58,6 @@ done
 if $is_intermediate; then
 	out_trm="$INTERMEDIATE_DIR/$(basename "$out_trm")"
 	out_befile="$INTERMEDIATE_DIR/$(basename "$befile")"
-	rm -rf "$INTERMEDIATE_DIR"
 	mkdir -p "$INTERMEDIATE_DIR"
 fi
 

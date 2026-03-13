@@ -28,6 +28,7 @@ while [[ $# -gt 0 ]]; do
 done
 if $intermediate; then
         echo "Intermediate mode enabled"
+        rm -rf "$INTERMEDIATE_DIR"
 
         echo "Running make_trm.sh for all data ..."
         "$SH_UTILS_DIR/make_trm.sh" \
@@ -46,7 +47,7 @@ if $intermediate; then
                         --out-trm "$TRM_DATA"
         done
 else
-        echo "Nonparametric mode disabled"
+        echo "Intermediate mode disabled"
         echo "Running make_trm.sh for all data ..."
         "$SH_UTILS_DIR/make_trm.sh" \
                 --befile "$befile" \
