@@ -26,18 +26,39 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-if $intermediate
-echo "Running make_trm.sh for all data ..."
-"$SH_UTILS_DIR/make_trm.sh" \
-        --befile "$befile" \
-        --trm-cutoff 1.00 \
-        --out-trm "$TRM_DATA"
+if $intermediate; then
+        echo "Intermediate mode enabled"
 
-for chr in {1..29}; do
-    echo "Running make_trm.sh for chromosome $chr ..."
-    "$SH_UTILS_DIR/make_trm.sh" \
-        --befile "$befile" \
-        --chr "$chr" \
-        --trm-cutoff 1.00 \
-        --out-trm "$TRM_DATA"
-done
+        echo "Running make_trm.sh for all data ..."
+        "$SH_UTILS_DIR/make_trm.sh" \
+                --befile "$befile" \
+                --trm-cutoff 1.00 \
+                --intermediate \
+                --out-trm "$TRM_DATA"
+
+        for chr in {1..29}; do
+                echo "Running make_trm.sh for chromosome $chr ..."
+                "$SH_UTILS_DIR/make_trm.sh" \
+                        --befile "$befile" \
+                        --chr "$chr" \
+                        --trm-cutoff 1.00 \
+                        --intermediate \
+                        --out-trm "$TRM_DATA"
+        done
+else
+        echo "Nonparametric mode disabled"
+        echo "Running make_trm.sh for all data ..."
+        "$SH_UTILS_DIR/make_trm.sh" \
+                --befile "$befile" \
+                --trm-cutoff 1.00 \
+                --out-trm "$TRM_DATA"
+
+        for chr in {1..29}; do
+                echo "Running make_trm.sh for chromosome $chr ..."
+                "$SH_UTILS_DIR/make_trm.sh" \
+                        --befile "$befile" \
+                        --chr "$chr" \
+                        --trm-cutoff 1.00 \
+                        --out-trm "$TRM_DATA"
+        done
+fi
