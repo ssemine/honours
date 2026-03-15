@@ -85,7 +85,7 @@ if [[ -n "$chr" ]]; then
         --chr "$chr" \
         --make-bod \
         --out "$out_befile"
-    befile="$out_befile"
+    befile="$out_befile" # need to change
 else
     # Autosome TRM
     if $is_intermediate; then
