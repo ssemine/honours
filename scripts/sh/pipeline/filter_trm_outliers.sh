@@ -27,11 +27,12 @@ for dir in "$INTERMEDIATE_DIR"/**/; do
     befile_base=$(basename "${befile[0]}")
     befile_prefix="${befile_base%%.*}"  
     
+    echo "$dir$trm_prefix"
     Rscript "$R_TBLUP_DIR/iqr_outliers.R" "$dir$trm_prefix" > "$excl_iids"
     
-    osca \
-        --befile "$dir$befile_prefix" \
-        --remove "$excl_iids" \
-        --make-bod \
-        --out "$GENE_EXP_DIR/final_$befile_prefix" # figure out how to name this
-done  
+    #osca \
+    #    --befile "$dir$befile_prefix" \
+    #    --remove "$excl_iids" \
+    #    --make-bod \
+    #    --out "$GENE_EXP_DIR/final_$befile_prefix" # figure out how to name this
+done
