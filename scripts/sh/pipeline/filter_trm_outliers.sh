@@ -33,5 +33,5 @@ for dir in "$INTERMEDIATE_DIR"/**/; do
         --befile "$dir$befile_prefix" \
         --remove "$excl_iids" \
         --make-bod \
-        --out "$GENE_EXP_DIR/final_$befile_prefix" # figure out how to name this
+        --out "$GENE_EXP_FINAL_DIR/final_$befile_prefix" # figure out how to name this
 done
