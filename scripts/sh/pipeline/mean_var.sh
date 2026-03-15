@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source(/home/s4693165/honours/config/paths.conf)
+source /home/s4693165/honours/config/paths.conf
 
 # Call probes from initial autosome expression profile
 "$SH_UTILS_DIR/get_mean_var.sh --befile $GENE_EXP_AUTO_DATA --out $PROBES_DIR/initial_auto"
