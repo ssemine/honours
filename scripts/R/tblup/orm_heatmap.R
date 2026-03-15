@@ -2,6 +2,9 @@ library(ggplot2)
 library(reshape2)
 library(pheatmap)
 
+# NEED SERIOUS REWORKING
+
+
 setwd("/home/s4693165/honours/scripts/R")
 source("tblup/orm_helper_functions.R")
 

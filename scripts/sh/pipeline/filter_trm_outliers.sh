@@ -27,7 +27,7 @@ for dir in "$INTERMEDIATE_DIR"/**/; do
     befile_base=$(basename "${befile[0]}")
     befile_prefix="${befile_base%.*}"
     
-    Rscript "$R_TBLUP_DIR/iqr_outliers.R" "$dir$trm_prefix" > "$excl_iids"
+    Rscript "$R_UTILS_DIR/iqr_outliers.R" "$dir$trm_prefix" > "$excl_iids"
     
     osca \
         --befile "$dir$befile_prefix" \
