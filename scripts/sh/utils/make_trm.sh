@@ -55,17 +55,23 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Determine prefix
+if $is_intermediate; then
+    preprefix="" # empty for intermediate mode
+else
+    preprefix="final_"
+fi
+
 if [[ -n "$chr" ]]; then
     if [[ -n "$trm_cutoff" ]]; then
-        prefix="chr${chr}_cut${trm_cutoff}"
+        prefix="${preprefix}chr${chr}_cut${trm_cutoff}"
     else
-        prefix="chr${chr}"
+        prefix="${preprefix}chr${chr}"
     fi
 else
     if [[ -n "$trm_cutoff" ]]; then
-        prefix="cut${trm_cutoff}"
+        prefix="${preprefix}cut${trm_cutoff}"
     else
-        prefix="nocut"
+        prefix="${preprefix}nocut"
     fi
 fi
 
