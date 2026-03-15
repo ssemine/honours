@@ -84,7 +84,7 @@ if [[ -n "$chr" ]]; then
         out_trm="$prefix_dir/$prefix"_"$(basename "$out_trm")"
     else
         out_befile="$GENE_EXP_FINAL_DIR/$prefix"_"$(basename "$befile")"
-        out_trm="$GENE_EXP_FINAL_DIR/$prefix"_"$(basename "$out_trm")"
+        out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
     fi
     osca \
         --befile "$befile" \
@@ -106,7 +106,7 @@ else
         out_trm="$prefix_dir/$prefix"_"$(basename "$out_trm")"
     else
         if [[ -n "$trm_cutoff" ]]; then
-            out_trm="$(dirname "$out_trm")/$prefix\_$(basename "$out_trm")"
+            out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
         fi
     fi
 fi
