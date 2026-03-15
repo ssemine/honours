@@ -20,17 +20,18 @@ var_df_final <- read.table(var_path_final, header=FALSE)
 colnames(mean_df_initial) <- c("probe", "mean")
 colnames(var_df_initial)  <- c("probe", "variance")
 colnames(mean_df_std) <- c("probe", "mean")
-colnames(var_df_std) <- c("probe", "mean")
+colnames(var_df_std) <- c("probe", "variance")
 colnames(mean_df_final) <- c("probe", "mean")
 colnames(var_df_final) <- c("probe", "variance")
 
 df_initial <- merge(mean_df_initial, var_df_initial, by = "probe")
-df_std <- merge(mean_df_std, var_df_std, by "probe")
+df_std <- merge(mean_df_std, var_df_std, by = "probe")
 df_final <- merge(mean_df_final, var_df_final, by = "probe")
 
-ggplot(df_initial, aes(x = mean, y = variance)) +
-  geom_point(alpha = 0.3, color = "blue") +
-  geom_point(data = df_std, aes(x = mean, y = variance), color="red", alpha=0.5) +
+ggplot(df_final, aes(x = abs(mean), y = variance)) +
+  geom_point(alpha = 1, color = "blue") +
+  geom_point(data = df_std, aes(x = abs(mean), y = variance), color="red", alpha=0.01) +
+  scale_x_log10() +
   labs(
     title = "Mean vs Variance of Probes",
     x = expression(mu),

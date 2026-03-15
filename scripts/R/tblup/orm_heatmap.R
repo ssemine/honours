@@ -6,10 +6,10 @@ library(pheatmap)
 
 
 setwd("/home/s4693165/honours/scripts/R")
-source("tblup/orm_helper_functions.R")
+source("tblup/utils/read_orm.R")
 
 # ORM matrix initialisation
-orm_obj <- ReadORMBin("/scratch/user/s4693165/tblup/trm/cut_1.00_trm_std_standard")
+orm_obj <- ReadORMBin("/scratch/user/s4693165/gene_exp_data/final/final_trm_std")
 n <- nrow(orm_obj$id)
 ORM_mat <- matrix(0, n, n)
 diag(ORM_mat) <- orm_obj$diag
@@ -21,7 +21,7 @@ colnames(ORM_mat) <- orm_obj$id[,1]
 # Off-diagonals distribution
 relatedness_values <- ORM_mat[lower.tri(ORM_mat, diag = FALSE)]
 df <- data.frame(relatedness = relatedness_values)
-p1 <- ggplot(df, aes(x = relatedness)) +
+ggplot(df, aes(x = relatedness)) +
   geom_histogram(bins = n, fill = "steelblue", color = "black") +
   theme_minimal() +
   labs(
@@ -32,7 +32,7 @@ p1 <- ggplot(df, aes(x = relatedness)) +
 
 diag_vals <- orm_obj$diag
 df <- data.frame(diag_vals = diag_vals)
-p2 <- ggplot(df, aes(x = diag_vals)) +
+ggplot(df, aes(x = diag_vals)) +
   geom_histogram(
     bins = n,
     fill = "black",
@@ -57,7 +57,7 @@ df <- melt(ORM_mat)
 colnames(df) <- c("Individual1", "Individual2", "Value")
 df$Individual1 <- factor(df$Individual1, levels = ordered_inds)
 df$Individual2 <- factor(df$Individual2, levels = ordered_inds)
-p3 <- ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
+ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
   geom_tile() +
   scale_fill_gradient2(
     low = "blue",      # low relatedness
