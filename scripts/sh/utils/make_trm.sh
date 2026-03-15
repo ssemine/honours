@@ -76,7 +76,7 @@ if [[ -n "$chr" ]]; then
 	else
 		if $is_intermediate; then
 			prefix="chr${chr}"
-			mkdir -p "$INTERMEDIATE_DIR/$prefix_"
+			mkdir -p "$INTERMEDIATE_DIR/$prefix"
 			out_befile="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$befile")"
 			out_trm="$INTERMEDIATE_DIR/$prefix/$prefix"_"$(basename "$out_trm")"
 		else
