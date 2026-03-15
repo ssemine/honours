@@ -10,6 +10,8 @@ source "$PHENO_CONF"
 
 befile="$GENE_EXP_FILTERED_DATA"
 is_intermediate=false
+trm_cutoff=1.00
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --befile)
@@ -20,6 +22,10 @@ while [[ $# -gt 0 ]]; do
 	    is_intermediate=true
 	    shift 1
 	    ;;
+        --trm-cutoff)
+            trm_cutoff="$2"
+            shift 2
+            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -33,7 +39,7 @@ if $intermediate; then
         echo "Running make_trm.sh for all data ..."
         "$SH_UTILS_DIR/make_trm.sh" \
                 --befile "$befile" \
-                --trm-cutoff 1.00 \
+                --trm-cutoff "$trm_cutoff" \
                 --intermediate \
                 --out-trm "$TRM_DATA"
 
@@ -42,7 +48,7 @@ if $intermediate; then
                 "$SH_UTILS_DIR/make_trm.sh" \
                         --befile "$befile" \
                         --chr "$chr" \
-                        --trm-cutoff 1.00 \
+                        --trm-cutoff "$trm_cutoff" \
                         --intermediate \
                         --out-trm "$TRM_DATA"
         done
@@ -51,7 +57,7 @@ else
         echo "Running make_trm.sh for all data ..."
         "$SH_UTILS_DIR/make_trm.sh" \
                 --befile "$befile" \
-                --trm-cutoff 1.00 \
+                --trm-cutoff "$trm_cutoff" \
                 --out-trm "$TRM_DATA"
 
         for chr in {1..29}; do
@@ -59,7 +65,7 @@ else
                 "$SH_UTILS_DIR/make_trm.sh" \
                         --befile "$befile" \
                         --chr "$chr" \
-                        --trm-cutoff 1.00 \
+                        --trm-cutoff "$trm_cutoff" \
                         --out-trm "$TRM_DATA"
         done
 fi
