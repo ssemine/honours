@@ -13,4 +13,10 @@ iqr <- q[2] - q[1]
 upper <- q[2] + 3*iqr
 lower <- q[1] - 3*iqr
 outliers <-which(diag_vals > upper | diag_vals < lower)
-cat(orm_obj$id[outliers,1], orm_obj$id[outliers,1], sep=" ", fill=TRUE)
+write.table(
+    cbind(orm_obj$id[outliers,1], orm_obj$id[outliers,1]),
+    file = "",
+    row.names = FALSE,
+    col.names = FALSE,
+    quote = FALSE
+)
