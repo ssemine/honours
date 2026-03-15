@@ -17,11 +17,9 @@ library(ggplot2)
 
 ggplot(df, aes(x = mean, y = variance)) +
   geom_point(alpha = 0.3, color = "blue") +
-  scale_x_log10() +                       
-  scale_y_log10() +                         
   labs(
     title = "Mean vs Variance of Probes",
-    x = "Mean expression (log10)",
-    y = "Variance of expression (log10)"
+    x = expression(mu),
+    y = expression(sigma^2)
   ) +
-  theme_minimal()
+  theme_bw()

@@ -7,12 +7,18 @@ module load "$OSCA_MODULE"
 
 mkdir -p "$PROBES_DIR"
 
+out="$PROBES_DIR/probe"
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --befile)
             befile="$2"
             shift 2
             ;;
+	--out)
+		out="$"
+		shift 2
+		;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -24,4 +30,4 @@ osca \
     --befile "$befile" \
     --get-variance \
     --get-mean \
-    --out "$PROBES_DIR/probes"
+    --out "$out"
