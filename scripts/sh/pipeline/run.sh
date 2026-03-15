@@ -8,7 +8,14 @@ source /home/s4693165/honours/config/paths.conf
 mkdir -p "$GENE_EXP_PREPROCSESSED_DIR"
 mkdir -p "$GENE_EXP_FINAL_DIR"
 
+# Initial BOD and phenotype filtering
 ./filter.sh
+
+# Initial TRM assembly
 ./trm.sh --intermediate --befile "$GENE_EXP_FILTERED_DATA" --trm-cutoff 1.00
+
+# Outlier filtering
 ./filter_trm_outliers.sh
+
+# Final TRM assembly
 ./trm.sh --befile "$GENE_EXP_FINAL_DATA" --trm-cutoff 1.00
