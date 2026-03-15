@@ -19,7 +19,7 @@ source "$OSCA_CONF"
 module load "$OSCA_MODULE"
 
 orm_alg="$ORM_ALG_STANDARD"
-intermediate=false
+is_intermediate=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -77,8 +77,8 @@ if [[ -n "$chr" ]]; then
         out_befile="$prefix_dir/$prefix"_"$(basename "$befile")"
         out_trm="$prefix_dir/$prefix"_"$(basename "$out_trm")"
     else
-        out_befile="$(dirname "$befile")/$prefix"_"$(basename "$befile")"
-        out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
+        out_befile="$GENE_EXP_FINAL_DIR/$prefix"_"$(basename "$befile")"
+        out_trm="$GENE_EXP_FINAL_DIR/$prefix"_"$(basename "$out_trm")"
     fi
     osca \
         --befile "$befile" \

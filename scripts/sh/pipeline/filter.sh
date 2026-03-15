@@ -44,4 +44,4 @@ echo "Running map_iid_pheno.sh ..."
     --pheno-map "$PHENO_MAP" \
     --pheno-file "$PHENO_FILTERED_DATA" \
     --oii "$GENE_EXP_FILTERED_OII_DATA" \
-    --out-pheno "$PHENO_IID_DATA" \
+    --out-pheno "$PHENO_IID_DATA"

@@ -8,7 +8,6 @@ source "$PHENO_CONF"
 
 # First, use GENE_EXP_FILTERED_DATA, then GENE_EXP_FINAL_DATA after outlier filtering
 
-befile="$GENE_EXP_FILTERED_DATA"
 is_intermediate=false
 trm_cutoff=1.00
 
@@ -32,7 +31,7 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-if $intermediate; then
+if $is_intermediate; then
         echo "Intermediate mode enabled"
         rm -rf "$INTERMEDIATE_DIR"
 
