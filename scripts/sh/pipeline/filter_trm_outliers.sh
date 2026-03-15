@@ -31,9 +31,9 @@ for dir in "$INTERMEDIATE_DIR"/**/; do
     echo "$dir$befile_prefix" #correct
     Rscript "$R_TBLUP_DIR/iqr_outliers.R" "$dir$trm_prefix" > "$excl_iids"
     
-    #osca \
-    #    --befile "$dir$befile_prefix" \
-    #    --remove "$excl_iids" \
-    #    --make-bod \
-    #    --out "$GENE_EXP_DIR/final_$befile_prefix" # figure out how to name this
+    osca \
+        --befile "$dir$befile_prefix" \
+        --remove "$excl_iids" \
+        --make-bod \
+        --out "$GENE_EXP_DIR/final_$befile_prefix" # figure out how to name this
 done
