@@ -18,4 +18,4 @@ mkdir -p "$GENE_EXP_FINAL_DIR"
 ./filter_trm_outliers.sh
 
 # Final TRM assembly
-./trm.sh --befile "$GENE_EXP_FINAL_DATA" --trm-cutoff 1.00
+./trm.sh --befile "$GENE_EXP_FILTERED_DATA" --trm-cutoff 1.00
