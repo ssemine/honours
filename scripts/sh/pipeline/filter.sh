@@ -23,17 +23,15 @@ echo "Running filter_bod_pheno.sh ..."
     --out-pheno "$PHENO_FILTERED_DATA"
 
 # Filters BOD and phenotype files for NA values, specifically AFC CHECKED
-echo "Running filter_bod_na_pheno.sh ..."
-"$SH_UTILS_DIR/filter_bod_na_pheno.sh" \
-    --pheno-idx "$HEIFER_AGE_CALVING_IDX" \
-    --pheno-map "$PHENO_MAP" \
+"$SH_UTILS_DIR/barcode_to_iid.sh" \
     --pheno-file "$PHENO_FILTERED_DATA" \
-    --befile "$GENE_EXP_FILTER_BOD_PHENO_DATA" \
-    --excl-iids "$EXCL_IIDS_BOD_NA_PHENO" \
-    --out-bod "$GENE_EXP_FILTER_BOD_NA_PHENO_DATA"
+    --pheno_map "$PHENO_MAP_DATA" \
+    --out "$PHENO_IID_DATA"
+
+# CHECK FOR NA
 
 # Standardises BOD files CHECKED
-echo "Running std_bod.sh ..."
-"$SH_UTILS_DIR/std_bod.sh" \
-    --befile "$GENE_EXP_FILTER_BOD_NA_PHENO_DATA" \
-    --out-bod "$GENE_EXP_STD_DATA"
+#echo "Running std_bod.sh ..."
+#"$SH_UTILS_DIR/std_bod.sh" \
+#    --befile "$GENE_EXP_FILTER_BOD_NA_PHENO_DATA" \
+#    --out-bod "$GENE_EXP_STD_DATA"
