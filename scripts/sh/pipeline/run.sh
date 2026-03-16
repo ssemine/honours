@@ -12,7 +12,14 @@ mkdir -p "$GENE_EXP_FINAL_DIR"
 ./filter.sh
 
 # Initial TRM assembly
-./trm.sh --intermediate --befile "$GENE_EXP_FILTER_BOD_900_PHENO_DATA" --trm-cutoff 1.00 --out-trm "$INTERMEDIATE_DIR/trm_900"
+#./trm.sh --intermediate --befile "$GENE_EXP_FILTER_BOD_900_PHENO_DATA" --trm-cutoff 1.00 --out-trm "$INTERMEDIATE_DIR/trm_900"
+osca \
+		--befile "$GENE_EXP_FILTER_BOD_900_PHENO_DATA" \
+		--make-orm \
+		--orm-alg "$orm_alg" \
+		--orm-cutoff 1.00 \
+		--out "$INTERMEDIATE_DIR/trm_900"
+
 
 # Outlier filtering
 ./filter_trm_outliers.sh \

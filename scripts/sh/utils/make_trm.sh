@@ -102,11 +102,11 @@ else
             [[ -f "$src_file" ]] || continue
             cp "$src_file" "$prefix_dir/$prefix"_"$(basename "$befile").${ext}"
         done
-        befile="$prefix_dir/$prefix"_"$(basename "$befile")"
-        out_trm="$prefix_dir/$prefix"_"$(basename "$out_trm")"
+        #befile="$prefix_dir/$prefix"_"$(basename "$befile")"
+        #out_trm="$prefix_dir/$prefix"_"$(basename "$out_trm")"
     else
         if [[ -n "$trm_cutoff" ]]; then
-            out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
+            #out_trm="$(dirname "$out_trm")/$prefix"_"$(basename "$out_trm")"
         fi
     fi
 fi
