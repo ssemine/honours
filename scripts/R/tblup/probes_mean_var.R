@@ -25,7 +25,7 @@ ggplot(df_initial, aes(x = mean, y = variance)) +
   geom_point(alpha = 0.3, color = "blue") +
   geom_point(data = df_final, aes(x = mean, y = variance), color="red", alpha=0.5) +
   labs(
-    title = "Mean vs Variance of Probes",
+    title = "mean x variance",
     x = expression(mu),
     y = expression(sigma^2)
   ) +

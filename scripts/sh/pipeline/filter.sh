@@ -35,7 +35,7 @@ echo "Running filter_bod_pheno.sh ..."
     --out-bod "$GENE_EXP_FILTER_BOD_NA_PHENO_DATA"
     
 # Standardises BOD files CHECKED
-#echo "Running std_bod.sh ..."
-#"$SH_UTILS_DIR/std_bod.sh" \
-#    --befile "$GENE_EXP_FILTER_BOD_NA_PHENO_DATA" \
-#    --out-bod "$GENE_EXP_STD_DATA"
+echo "Running std_bod.sh ..."
+"$SH_UTILS_DIR/std_bod.sh" \
+    --befile "$GENE_EXP_FILTER_BOD_NA_PHENO_DATA" \
+    --out-bod "$GENE_EXP_STD_DATA"
