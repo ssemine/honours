@@ -28,3 +28,29 @@ osca \
 
 # Final TRM assembly
 ./trm.sh --befile "$GENE_EXP_FINAL_DIR/final" --trm-cutoff 1.00 --out-trm "$TBLUP_TRM_DIR/final_trm"
+
+# oreml
+
+./get_pca.sh \
+    --befile "$GENE_EXP_FINAL_DIR/final" \
+    --trm "$TBLUP_TRM_DIR/final_trm" \
+    --out-pca "$PCA_DATA" \
+    --n-pca 4
+
+gawk '
+FNR==NR {
+    iid[$1]
+    next
+}
+FNR==1 { next }
+($1 in iid) {
+    print $1, $1, $8
+}
+' $GENE_EXP_FINAL_DIR/final.oii "$PHENO_IID_DATA" > $OREML_PHENO_DATA
+
+"$SH_UTILS_DIR/run_oreml.sh" \
+    --befile "$GENE_EXP_FINAL_DIR/final" \
+    --trm "$TBLUP_TRM_DIR/final_trm" \
+    --qcovar-file "$PCA_DATA.eigenvec" \
+    --out "$RESULTS_DIR/tblup_final" \
+    --pheno "$OREML_PHENO_DATA"
