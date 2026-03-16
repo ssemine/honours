@@ -51,7 +51,6 @@ FNR==1 { next }
 ' $GENE_EXP_FINAL_DIR/final.oii "$PHENO_IID_DATA" > $OREML_PHENO_DATA
 
 "$SH_UTILS_DIR/run_oreml.sh" \
-    --befile "$GENE_EXP_FINAL_DIR/final" \
     --trm "$TBLUP_TRM_DIR/final_trm" \
     --qcovar-file "$PCA_DATA.eigenvec" \
     --out "$RESULTS_DIR/tblup_final" \
