@@ -1,8 +1,3 @@
-BEGIN {
-    FS="[ \t]+"
-    OFS="\t"
-}
-
 FNR==NR {
     iid[$1]=$2
     fid[$1]=$3
