@@ -25,7 +25,7 @@ echo "Running filter_bod_pheno.sh ..."
 # Filters BOD and phenotype files for NA values, specifically AFC CHECKED
 "$SH_UTILS_DIR/barcode_to_iid.sh" \
     --pheno-file "$PHENO_FILTERED_DATA" \
-    --pheno_map "$PHENO_MAP_DATA" \
+    --pheno-map "$PHENO_MAP_DATA" \
     --out "$PHENO_IID_DATA"
 
 # CHECK FOR NA

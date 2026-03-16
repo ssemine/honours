@@ -5,11 +5,11 @@ source "$PHENO_CONF"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --pheno_file)
+        --pheno-file)
             pheno_file="$2"
             shift 2
             ;;
-        --pheno_map)
+        --pheno-map)
             pheno_map="$2"
             shift 2
             ;;
