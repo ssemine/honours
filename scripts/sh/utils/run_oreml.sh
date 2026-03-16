@@ -45,24 +45,28 @@ if [[ -n "$trm_flist" ]]; then
             --multi-orm "$trm_flist" \
             --covar "$covar_file" \
             --qcovar "$qcovar_file" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     elif [[ -n "$covar_file" ]]; then
         osca \
             --reml \
             --multi-orm "$trm_flist" \
             --covar "$covar_file" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     elif [[ -n "$qcovar_file" ]]; then
         osca \
             --reml \
             --multi-orm "$trm_flist" \
             --qcovar "$qcovar_file" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     else
         osca \
             --reml \
             --multi-orm "$trm_flist" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     fi
 elif [[ -n "$trm" ]]; then
     if [[ -n "$covar_file" && -n "$qcovar_file" ]]; then
@@ -71,24 +75,28 @@ elif [[ -n "$trm" ]]; then
             --orm "$trm" \
             --covar "$covar_file" \
             --qcovar "$qcovar_file" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     elif [[ -n "$covar_file" ]]; then
         osca \
             --reml \
             --orm "$trm" \
             --covar "$covar_file" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     elif [[ -n "$qcovar_file" ]]; then
         osca \
             --reml \
             --orm "$trm" \
             --qcovar "$qcovar_file" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     else
         osca \
             --reml \
             --orm "$trm" \
-            --out "$out"
+            --out "$out" \
+            --pheno "$pheno"
     fi
 else
     exit 1
