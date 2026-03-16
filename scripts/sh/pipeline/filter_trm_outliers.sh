@@ -32,7 +32,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-Rscript "$R_UTILS_DIR/iqr_outliers.R" "$trm" > "$excl_iids"
+Rscript "/home/s4693165/honours/scripts/R/tblup/utils/iqr_outliers.R" "$trm" > "$excl_iids"
          
 osca \
     --befile "$befile" \
