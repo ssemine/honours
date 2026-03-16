@@ -15,17 +15,14 @@ p1 <- ggplot(df, aes(x = heifer_age_calving)) +
     x="Age at First calf (days)",
     y="Count"
   )
-
-# visualising afc vs wks_preg
-p2 <- ggplot(df, aes(x = heifer_age_calving, y = hef_wks_preg)) +
-  geom_hex(bins=20) +
+p1 <- ggplot(df, aes(x = heifer_age_calving)) + 
+  geom_density(fill = "steelblue", alpha = 0.6) +
   theme_minimal() +
   labs(
-    title="Hexmap of AFC vs pregnancy duration",
-    x="Age at First calf (days)",
-    y="Pregnancy duration (weeks)"
+    title = "AFC Distribution",
+    x = "Age at First Calf (days)",
+    y = "Density"
   )
-
 ggsave(filename = "~/honours/data/plots/pheno/afc_dis.png",
        plot = p1,
        width = 10,      # width in inches
