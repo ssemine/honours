@@ -52,6 +52,6 @@ FNR==1 { next }
 
 "$SH_UTILS_DIR/run_oreml.sh" \
     --trm "$TBLUP_TRM_DIR/final_trm" \
-    --qcovar-file "$PCA_DATA.eigenvec" \
+    --qcovar-file "$PCA_DATA"_4".eigenvec" \
     --out "$RESULTS_DIR/tblup_final" \
     --pheno "$OREML_PHENO_DATA"
