@@ -30,6 +30,10 @@ while [[ $# -gt 0 ]]; do
             is_per_chr=true
             shift 1
             ;;
+        --out-trm)
+            trm_out="$2"
+            shift 2
+            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -47,7 +51,7 @@ if $is_intermediate; then
                                 --chr "$chr" \
                                 --trm-cutoff "$trm_cutoff" \
                                 --intermediate \
-                                --out-trm "$TRM_DATA"
+                                --out-trm "$trm_out"
                 done
         else
                 echo "Running make_trm.sh for all data ..."
@@ -55,7 +59,7 @@ if $is_intermediate; then
                         --befile "$befile" \
                         --trm-cutoff "$trm_cutoff" \
                         --intermediate \
-                        --out-trm "$TRM_DATA"
+                        --out-trm "$trm_out"
         fi
 else
         echo "Intermediate mode disabled"
@@ -66,13 +70,13 @@ else
                                 --befile "$befile" \
                                 --chr "$chr" \
                                 --trm-cutoff "$trm_cutoff" \
-                                --out-trm "$TRM_DATA"
+                                --out-trm "$trm_out"
                 done
         else
                 echo "Running make_trm.sh for all data ..."
                 "$SH_UTILS_DIR/make_trm.sh" \
                         --befile "$befile" \
                         --trm-cutoff "$trm_cutoff" \
-                        --out-trm "$TRM_DATA"
+                        --out-trm "$trm_out"
         fi
 fi
