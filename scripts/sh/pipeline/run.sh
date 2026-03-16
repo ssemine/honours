@@ -16,7 +16,6 @@ mkdir -p "$GENE_EXP_FINAL_DIR"
 osca \
 		--befile "$GENE_EXP_FILTER_BOD_900_PHENO_DATA" \
 		--make-orm \
-		--orm-alg "$orm_alg" \
 		--orm-cutoff 1.00 \
 		--out "$INTERMEDIATE_DIR/trm_900"
 
