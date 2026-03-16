@@ -1,12 +1,11 @@
 FNR==NR {
-    iid[$1]=$2
-    fid[$1]=$3
+    iid[$1] = $2
     next
 }
 
 FNR==1 { next }
 
-$phenoIdx=="NA" {
-    if($1 in iid)
-        print fid[$1], iid[$1]
+$phenoIdx == "NA" {
+    if ($1 in iid)
+        print iid[$1], iid[$1]
 }
