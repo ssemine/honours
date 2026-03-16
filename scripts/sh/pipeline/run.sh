@@ -1,7 +1,9 @@
 #!/bin/bash
 
 source /home/s4693165/honours/config/paths.conf
+source "$OSCA_CONF"
 
+module load "$OSCA_MODULE"
 # exclude_sex_chr.sh -> filter_bod_pheno.sh -> filter_bod_na_pheno.sh -> map_iid_pheno.sh PHENOTYPE AND BOD PRE PREP
 # make_trm.sh -> (filter_trm_outliers.sh) -> get_covar.sh -> get_pca.sh -> run_oreml.sh
 
@@ -31,7 +33,7 @@ osca \
 
 # oreml
 
-./get_pca.sh \
+"$SH_UTILS_DIR/get_pca.sh" \
     --befile "$GENE_EXP_FINAL_DIR/final" \
     --trm "$TBLUP_TRM_DIR/final_trm" \
     --out-pca "$PCA_DATA" \
