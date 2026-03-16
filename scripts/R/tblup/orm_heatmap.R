@@ -79,127 +79,14 @@ p3 <- ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
     title = "TRM Heatmap"
   )
 
-
-# Import phenotype file for sorting
-iid_pheno_path="/scratch/user/s4693165/pheno_data/iid_filtered_newest_version_phenotypes_Myworkingfile.txt"
-iid_pheno <- read.table(iid_pheno_path, header=TRUE)
-order_ids <- iid_pheno$iid[order(iid_pheno$hef_wks_preg)]
-order_ids <- df$Individual1[order(df$relatedness)]
-# GRM Heatmap (Sorted)
-df <- melt(ORM_mat)
-colnames(df) <- c("Individual1", "Individual2", "Value")
-df$Individual1 <- factor(df$Individual1, levels = order_ids)
-df$Individual2 <- factor(df$Individual2, levels = order_ids)
-
-
-ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
-  geom_tile() +
-  scale_fill_gradient2(
-    low = "blue",      # low relatedness
-    mid = "white",     # midpoint
-    high = "red",      # high relatedness
-    limits = c(min(df$Value), max(df$Value)),  # ensures legend matches data
-    name = "Transcriptomic relatedness",
-    breaks = seq(round(min(df$Value), 1), round(max(df$Value), 1), by = 0.5)# legend title
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),   # remove x-axis labels
-    axis.text.y = element_blank(),   # remove y-axis labels
-    axis.ticks = element_blank()     # remove tick marks
-  ) +
-  labs(
-    x = paste("Individuals (n =", n, ")"),
-    y = paste("Individuals (n =", n, ")"),
-    title = "TRM Heatmap"
-  ) 
-
-
-
-
-
-
-
-mat <- xtabs(Value ~ Individual1 + Individual2, data = df)
-hc <- hclust(as.dist(1 - mat))
-order_ids <- rownames(mat)[hc$height]
-df$Individual1 <- factor(df$Individual1, levels = order_ids)
-df$Individual2 <- factor(df$Individual2, levels = order_ids)
-ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
-  geom_tile() +
-  scale_fill_gradient2(
-    low = "blue",
-    mid = "white",
-    high = "red",
-    limits = c(min(df$Value), max(df$Value)),
-    name = "Transcriptomic relatedness",
-    breaks = seq(round(min(df$Value), 1), round(max(df$Value), 1), by = 0.5)
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank(),
-    axis.ticks = element_blank()
-  ) +
-  labs(
-    x = paste("Individuals (n =", n, ")"),
-    y = paste("Individuals (n =", n, ")"),
-    title = "TRM Heatmap (clustered)"
-  )
-
-
-# plot every group
-vars <- setdiff(names(iid_pheno), "iid")
-for (v in vars) {
-
-  order_ids <- iid_pheno$iid[order(iid_pheno[[v]], na.last = TRUE)]
-  order_ids <- intersect(order_ids, unique(df$Individual1))
-
-  df$Individual1 <- factor(df$Individual1, levels = order_ids)
-  df$Individual2 <- factor(df$Individual2, levels = order_ids)
-
-  p <- ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
-    geom_tile() +
-    scale_fill_gradient2(
-      low = "blue",
-      mid = "white",
-      high = "red",
-      limits = c(min(df$Value), max(df$Value)),
-      name = "Transcriptomic relatedness",
-      breaks = seq(round(min(df$Value),1), round(max(df$Value),1), by = 0.5)
-    ) +
-    theme_minimal() +
-    theme(
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks = element_blank()
-    ) +
-    labs(
-      x = paste("Individuals (n =", n, ")"),
-      y = paste("Individuals (n =", n, ")"),
-      title = paste("TRM Heatmap ordered by", v)
-    )
-
-  ggsave(
-    paste0("~/honours/data/plots/tblup/TRM_heatmap_ordered_by_", v, ".png"),
-    plot = p,
-    width = 8,
-    height = 8
-  )
-}
-
-ggsave(filename = "~/honours/data/plots/tblup/trm_off_d_dis.png",
-       plot = p1,
-       width = 10,
-       height = 6,
-       dpi = 300)
-ggsave(filename = "~/honours/data/plots/tblup/trm_d_dis.png",
-       plot = p2,
-       width = 10,      # width in inches
-       height = 6,      # height in inches
-       dpi = 300)       # resolution
-ggsave(filename = "~/honours/data/plots/tblup/trm_heart.png",
-       plot = p3,
-       width = 10,      # width in inches
-       height = 6,      # height in inches
-       dpi = 300)       # resolution
+p4 <- pheatmap(
+  ORM_mat,
+  color = colorRampPalette(c("blue", "white", "red"))(100),
+  show_rownames = FALSE,
+  show_colnames = FALSE,
+  main = "TRM Heatmap",
+  clustering_method = "complete",
+  clustering_distance_rows = "euclidean",
+  clustering_distance_cols = "euclidean",
+  border_color = NA
+)
