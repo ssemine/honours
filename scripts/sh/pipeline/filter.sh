@@ -25,7 +25,7 @@ echo "Running filter_bod_pheno.sh ..."
 # Filters BOD and phenotype files for NA values, specifically AFC CHECKED
 echo "Running filter_bod_na_pheno.sh ..."
 "$SH_UTILS_DIR/filter_bod_na_pheno.sh" \
-    --pheno-idx "$CALVING_SUCCESS_IDX" \
+    --pheno-idx "$HEIFER_AGE_CALVING_IDX" \
     --pheno-map "$PHENO_MAP" \
     --pheno-file "$PHENO_FILTERED_DATA" \
     --befile "$GENE_EXP_FILTER_BOD_PHENO_DATA" \
