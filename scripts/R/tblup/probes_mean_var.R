@@ -21,13 +21,18 @@ colnames(var_df_final) <- c("probe", "variance")
 df_initial <- merge(mean_df_initial, var_df_initial, by = "probe")
 df_final <- merge(mean_df_final, var_df_final, by = "probe")
 
-ggplot(df_initial, aes(x = mean, y = variance)) +
+p1 <- ggplot(df_initial, aes(x = mean, y = variance)) +
   geom_point(alpha = 0.3, color = "blue") +
   geom_point(data = df_final, aes(x = mean, y = variance), color="red", alpha=0.5) +
   labs(
-    title = "mean x variance",
+    title = "",
     x = expression(mu),
     y = expression(sigma^2)
   ) +
   theme_bw()
+ggsave(filename = "~/honours/data/plots/tblup/mean_var.png",
+       plot = p1,
+       width = 10,      # width in inches
+       height = 6,      # height in inches
+       dpi = 300) 
 

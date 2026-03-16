@@ -6,10 +6,10 @@ library(pheatmap)
 
 
 setwd("/home/s4693165/honours/scripts/R")
-source("tblup/orm_helper_functions.R")
+source("tblup/utils/read_orm.R")
 
 # ORM matrix initialisation
-orm_obj <- ReadORMBin("/scratch/user/s4693165/tblup/trm/cut_1.00_trm_std_standard")
+orm_obj <- ReadORMBin("/scratch/user/s4693165/tblup/trm/final_trm")
 n <- nrow(orm_obj$id)
 ORM_mat <- matrix(0, n, n)
 diag(ORM_mat) <- orm_obj$diag
