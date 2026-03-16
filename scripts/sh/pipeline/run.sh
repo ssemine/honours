@@ -12,11 +12,11 @@ mkdir -p "$GENE_EXP_FINAL_DIR"
 ./filter.sh
 
 # Initial TRM assembly
-./trm.sh --intermediate --befile "$GENE_EXP_FILTERED_DATA" --trm-cutoff 1.00
+./trm.sh --intermediate --befile "$GENE_EXP_FILTER_BOD_900_PHENO_DATA" --trm-cutoff 1.00
 
 # Outlier filtering
 ./filter_trm_outliers.sh
 
 # Final TRM assembly
-tmp_filepath="/scratch/user/s4693165/gene_exp_data/final/final_cut1.00_filtered_finalprofile.v2"
+tmp_filepath="/scratch/user/s4693165/gene_exp_data/final/final"
 ./trm.sh --befile "$tmp_filepath" --trm-cutoff 1.00
