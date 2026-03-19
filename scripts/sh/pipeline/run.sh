@@ -44,6 +44,7 @@ std_bod="$GENE_EXP_PREPROCESSED_DIR/std_befile_${trm_cutoff}"
 sd_min=0.02
 missing_ratio_probe=0.05
 
+echo "Start bod_qc.sh"
 "$SH_PIPE_DIR/bod_qc.sh" \
     --befile "$initial_befile" \
     --qc \
@@ -51,6 +52,7 @@ missing_ratio_probe=0.05
     --missing-ratio-probe "$missing_ratio_probe" \
     --log2-transform \
     --out-bod "$qc_bod"
+echo "Finish bod_qc.sh"
 
 "$SH_UTILS_DIR/std_bod.sh" \
     --befile "$afc_900_befile" \
