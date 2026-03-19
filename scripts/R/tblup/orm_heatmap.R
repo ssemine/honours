@@ -9,11 +9,7 @@ setwd("/home/s4693165/honours/scripts/R")
 source("tblup/utils/read_orm.R")
 
 # ORM matrix initialisation
-<<<<<<< HEAD
-orm_obj <- ReadORMBin("/scratch/user/s4693165/gene_exp_data/final/final_trm_std")
-=======
-orm_obj <- ReadORMBin("/scratch/user/s4693165/tblup/trm/final_trm")
->>>>>>> fixed_bod_pipeline
+orm_obj <- ReadORMBin("/scratch/user/s4693165/tblup/trm/final_trm_0.75")
 n <- nrow(orm_obj$id)
 ORM_mat <- matrix(0, n, n)
 diag(ORM_mat) <- orm_obj$diag
@@ -25,15 +21,9 @@ colnames(ORM_mat) <- orm_obj$id[,1]
 # Off-diagonals distribution
 relatedness_values <- ORM_mat[lower.tri(ORM_mat, diag = FALSE)]
 df <- data.frame(relatedness = relatedness_values)
-<<<<<<< HEAD
-ggplot(df, aes(x = relatedness)) +
-  geom_histogram(bins = n, fill = "steelblue", color = "black") +
-  theme_minimal() +
-=======
 p1 <- ggplot(df, aes(x = relatedness)) +
   geom_histogram(bins = n, fill = "black", color = "blue") +
   theme_bw() +
->>>>>>> fixed_bod_pipeline
   labs(
     x = "TRM off-diagonal values",
     y = "Count",
@@ -42,13 +32,9 @@ p1 <- ggplot(df, aes(x = relatedness)) +
 
 diag_vals <- orm_obj$diag
 df <- data.frame(diag_vals = diag_vals)
-<<<<<<< HEAD
-ggplot(df, aes(x = diag_vals)) +
-=======
 
 
 p2 <- ggplot(df, aes(x = diag_vals)) +
->>>>>>> fixed_bod_pipeline
   geom_histogram(
     bins = 100,
     fill = "black",
@@ -85,34 +71,6 @@ library(pheatmap)
 # Set font to Times New Roman
 par(family = "Times")
 
-<<<<<<< HEAD
-# GRM Heatmap (Unsorted)
-df <- melt(ORM_mat)
-colnames(df) <- c("Individual1", "Individual2", "Value")
-df$Individual1 <- factor(df$Individual1, levels = ordered_inds)
-df$Individual2 <- factor(df$Individual2, levels = ordered_inds)
-ggplot(df, aes(x = Individual1, y = Individual2, fill = Value)) +
-  geom_tile() +
-  scale_fill_gradient2(
-    low = "blue",      # low relatedness
-    mid = "white",     # midpoint
-    high = "red",      # high relatedness
-    limits = c(min(df$Value), max(df$Value)),  # ensures legend matches data
-    name = "Transcriptomic relatedness",
-    breaks = seq(round(min(df$Value), 1), round(max(df$Value), 1), by = 0.5)# legend title
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),   # remove x-axis labels
-    axis.text.y = element_blank(),   # remove y-axis labels
-    axis.ticks = element_blank()     # remove tick marks
-  ) +
-  labs(
-    x = paste("Individuals (n =", n, ")"),
-    y = paste("Individuals (n =", n, ")"),
-    title = "TRM Heatmap"
-  )
-=======
 p3 <- pheatmap(
   ORM_mat,
   color = colorRampPalette(c("blue", "white", "red"))(100),
@@ -139,5 +97,4 @@ p3 <- pheatmap(
   fontsize_col = 10
 )
 p4
->>>>>>> fixed_bod_pipeline
 
