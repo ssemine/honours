@@ -33,8 +33,8 @@ gene_cols <- setdiff(names(dt), c("IID", "FID"))
 
 cat("Applying log2(CPM + 1) transformation...\n")
 dt[, (gene_cols) := lapply(.SD, function(x) {
-  x <- as.numeric(x)
-  x[is.na(x)] <- 0
+  x <- suppressWarnings(as.numeric(x))
+  x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
   log2(x + 1)
 }), .SDcols = gene_cols]
 
