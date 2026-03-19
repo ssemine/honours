@@ -30,8 +30,8 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-txt_profile="$INTERMEDIATE_DIR/$befile.txt"
-txt_profile_transformed="$INTERMEDIATE_DIR/$befile.transformed.txt"
+txt_profile="$befile.txt"
+txt_profile_transformed="$befile.transformed.txt"
 
 if [ "$log2_transform" = true ]; then
     osca --befile "$befile" --make-efile --out "$txt_profile"
