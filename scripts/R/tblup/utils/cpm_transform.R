@@ -1,3 +1,8 @@
+if (!requireNamespace("data.table", quietly = TRUE)) {
+  cat("data.table not found, installing...\n")
+  install.packages("data.table", repos = "https://cloud.r-project.org")
+}
+
 library(data.table)
 
 args <- commandArgs(trailingOnly = TRUE)
