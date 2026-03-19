@@ -81,9 +81,15 @@ rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
         --pheno "$oreml_pheno_data"
 
 for ((pca=1; pca<=n_pca; pca++)); do
+    pca_oreml="${pca_data}_${pca}"
+    gawk \
+        -f "$AWK_SCRIPTS_DIR/get_oreml_pca.awk" \
+        -v n="$pca" \
+        "$pca_data.eigenvec" \
+        > "$pca_oreml.qcovar"
     "$SH_UTILS_DIR/run_oreml.sh" \
         --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
-        --qcovar-file "$pca_data"_${pca}".eigenvec" \
+        --qcovar-file "$pca_oreml.qcovar" \
         --out "$RESULTS_DIR/tblup_final_${trm_cutoff}_pca_${pca}" \
         --pheno "$oreml_pheno_data" 
 done
