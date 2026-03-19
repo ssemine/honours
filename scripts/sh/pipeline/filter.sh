@@ -53,10 +53,6 @@ while [[ $# -gt 0 ]]; do
             std_befile="$2"
             shift 2
             ;;
-        --trm-cutoff)
-            trm_cutoff="$2"
-            shift 2
-            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
