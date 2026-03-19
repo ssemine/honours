@@ -55,7 +55,7 @@ txt_profile_transformed="$befile.transformed.txt"
 
 if [ "$log2_transform" = true ]; then
     osca --befile "$befile" --make-efile --out "$txt_profile"
-    gawk 'BEGIN{OFS="\s"} 
+    gawk 'BEGIN{OFS=" "} 
     NR==1 {print; next}
     {
     for(i=3;i<=NF;i++){
