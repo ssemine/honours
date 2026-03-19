@@ -5,7 +5,8 @@ source "$OSCA_CONF"
 
 module load "$OSCA_MODULE"
 
-
+log2_transform=true
+qc=true
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --n-pca)
@@ -15,6 +16,14 @@ while [[ $# -gt 0 ]]; do
         --trm-cutoff)
             trm_cutoff="$2"
             shift 2
+            ;;
+        --log2-transform)
+            log2_transform=true
+            shift 1
+            ;;
+        --qc)
+            qc=true
+            shift 1
             ;;
         *)
             echo "Unknown argument: $1"
@@ -29,9 +38,26 @@ mkdir -p "$GENE_EXP_FINAL_DIR"
 oreml_pheno_data="$RESULTS_DIR/oreml_pheno_data_${trm_cutoff}.phen"
 pca_data="$COVAR_DIR/pca_${trm_cutoff}"
 excl_iids="$GENE_EXP_PREPROCESSED_DIR/excl_iids_trm_${trm_cutoff}.list"
+initial_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
+qc_bod="$GENE_EXP_PREPROCESSED_DIR/qc_befile_${trm_cutoff}"
+std_bod="$GENE_EXP_PREPROCESSED_DIR/std_befile_${trm_cutoff}"
+sd_min=0.02
+missing_ratio_probe=0.05
+
+"$SH_PIPE_DIR/bod_qc.sh" \
+    --befile "$initial_befile" \
+    --qc \
+    --sd-min "$sd_min" \
+    --missing-ratio-probe "$missing_ratio_probe" \
+    --log2-transform \
+    --out-bod "$qc_bod"
+
+"$SH_UTILS_DIR/std_bod.sh" \
+    --befile "$afc_900_befile" \
+    --out-bod "$std_bod"
 
 osca \
-    --befile "$GENE_EXP_STD_DATA" \
+    --befile "$std_bod" \
     --orm-cutoff "$trm_cutoff" \
     --make-orm \
     --out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}_tmp"

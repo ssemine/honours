@@ -14,7 +14,6 @@ shared_pheno="$PHENO_FILTERED_DATA"
 iid_pheno="$PHENO_IID_DATA"
 no_na_befile="$GENE_EXP_FILTER_BOD_NA_PHENO_DATA"
 afc_900_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
-std_befile="$GENE_EXP_STD_DATA"
 
 sbatch \
   --account="$ACCOUNT_STRING" \
@@ -36,5 +35,4 @@ sbatch \
 --shared-pheno $shared_pheno \
 --iid-pheno $iid_pheno \
 --no-na-befile $no_na_befile \
---afc-900-befile $afc_900_befile \
---std-befile $std_befile"
+--afc-900-befile $afc_900_befile"

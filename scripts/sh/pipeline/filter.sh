@@ -49,10 +49,6 @@ while [[ $# -gt 0 ]]; do
             afc_900_befile="$2"
             shift 2
             ;;
-        --std-befile)
-            std_befile="$2"
-            shift 2
-            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -94,12 +90,3 @@ echo "Running filter_bod_pheno.sh ..."
 "$SH_UTILS_DIR/filter_pheno_900.sh" \
     --befile "$no_na_befile" \
     --out-bod "$afc_900_befile"
-# log2 CPM
-
-# remove low variance
-
-# Standardises BOD files
-echo "Running std_bod.sh ..."
-"$SH_UTILS_DIR/std_bod.sh" \
-    --befile "$afc_900_befile" \
-    --out-bod "$std_befile"
