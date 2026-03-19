@@ -42,11 +42,18 @@ osca \
 	--make-orm \
 	--out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}"
 
+cp "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.orm.id" "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
+osca \
+    --befile "$GENE_EXP_STD_DATA" \
+    --keep "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list" \
+    --make-bod \
+    --out "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp"
+rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
 
 # Outlier filtering
 
 "$SH_PIPE_DIR/filter_trm_outliers.sh" \
-    --befile "$GENE_EXP_STD_DATA" \
+    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
     --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
     --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
     --excl-iids "$excl_iids"
