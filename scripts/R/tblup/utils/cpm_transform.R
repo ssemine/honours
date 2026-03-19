@@ -27,7 +27,7 @@ if (is.null(input_file) || is.null(output_file)) {
 }
 
 cat("Reading input file:", input_file, "\n")
-dt <- fread(input_file)
+dt <- fread(input_file, sep = " ", header = TRUE, fill = TRUE, data.table = TRUE)
 
 gene_cols <- setdiff(names(dt), c("IID", "FID"))
 
