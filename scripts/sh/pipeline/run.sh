@@ -97,7 +97,9 @@ rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
 #    --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
 #    --excl-iids "$excl_iids"
 
-cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}"
+cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.bod" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.bod"
+cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.opi" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.opi"
+cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.oii" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii"
 
 # Final TRM assembly
 "$SH_PIPE_DIR/trm.sh" \
