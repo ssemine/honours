@@ -43,6 +43,10 @@ qc_bod="$GENE_EXP_PREPROCESSED_DIR/qc_befile_${trm_cutoff}"
 std_bod="$GENE_EXP_PREPROCESSED_DIR/std_befile_${trm_cutoff}"
 sd_min=0.02
 missing_ratio_probe=0.05
+# add all these params to the caller func
+
+
+# add filtering by PCA1
 
 echo "Start bod_qc.sh"
 "$SH_PIPE_DIR/bod_qc.sh" \
@@ -80,12 +84,13 @@ rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
 
 # Outlier filtering
 
-"$SH_PIPE_DIR/filter_trm_outliers.sh" \
-    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
-    --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
-    --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
-    --excl-iids "$excl_iids"
+#"$SH_PIPE_DIR/filter_trm_outliers.sh" \
+#    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
+#    --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
+#    --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
+#    --excl-iids "$excl_iids"
 
+cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}"
 
 # Final TRM assembly
 "$SH_PIPE_DIR/trm.sh" \
@@ -102,6 +107,8 @@ rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
     --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
     --out-pca "$pca_data" \
     --n-pca "$n_pca"
+
+# add more covars, like cg, year
 
 "$SH_UTILS_DIR/run_oreml.sh" \
         --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
