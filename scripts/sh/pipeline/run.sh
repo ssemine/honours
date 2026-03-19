@@ -31,10 +31,10 @@ pca_data="$COVAR_DIR/pca_${trm_cutoff}"
 excl_iids="$GENE_EXP_PREPROCESSED_DIR/excl_iids_trm_${trm_cutoff}.list"
 
 osca \
-		--befile "$GENE_EXP_STD_DATA" \
-		--make-orm \
-		--orm-cutoff "$trm_cutoff" \
-		--out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}"
+	--befile "$GENE_EXP_STD_DATA" \
+    --orm-cutoff "$trm_cutoff" \
+	--make-orm \
+	--out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}"
 
 
 # Outlier filtering

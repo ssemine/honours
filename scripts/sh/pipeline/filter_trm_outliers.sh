@@ -9,8 +9,6 @@ source "$R_CONF"
 module load "$OSCA_MODULE"
 module load "$R_MODULE"
 
-excl_iids="$EXCL_IIDS_TRM"
-
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --befile)
