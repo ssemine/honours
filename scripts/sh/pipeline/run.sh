@@ -72,7 +72,7 @@ osca \
 
 cp "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.orm.id" "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
 osca \
-    --befile "$GENE_EXP_STD_DATA" \
+    --befile "$std_bod" \
     --keep "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list" \
     --make-bod \
     --out "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp"
