@@ -60,4 +60,6 @@ if [ "$log2_transform" = true ]; then
         --output "$txt_profile_transformed"
     osca --efile "$txt_profile_transformed" --gene-expression --make-bod --out "$out_bod"
     osca --befile "$out_bod" --update-opi "$befile.opi"
+else
+    cp "$befile" "$out_bod"
 fi
