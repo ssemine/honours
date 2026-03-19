@@ -38,7 +38,8 @@ osca \
 
 
 # Outlier filtering
-./filter_trm_outliers.sh \
+
+"$SH_PIPE_DIR/filter_trm_outliers.sh" \
     --befile "$GENE_EXP_STD_DATA" \
     --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
     --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
@@ -46,7 +47,7 @@ osca \
 
 
 # Final TRM assembly
-./trm.sh \
+"$SH_PIPE_DIR/trm.sh" \
     --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
     --trm-cutoff "$trm_cutoff" \
     --out-trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}"
