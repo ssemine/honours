@@ -55,9 +55,15 @@ txt_profile_transformed="$befile.transformed.txt"
 
 if [ "$log2_transform" = true ]; then
     osca --befile "$befile" --make-efile --out "$txt_profile"
-    Rscript "/home/s4693165/honours/scripts/R/tblup/utils/cpm_transform.R" \
-        --input "$txt_profile" \
-        --output "$txt_profile_transformed"
+    gawk 'BEGIN{OFS="\t"} 
+        NR==1 {print; next}
+        {
+        for(i=3;i<=NF;i++){
+            if($i=="" || $i=="NA" || $i !~ /^[0-9.eE+-]+$/) $i=0;
+            else $i=log($i+1)/log(2);
+        }
+        print
+        }' "$txt_profile" > "$txt_profile_transformed"
     osca --efile "$txt_profile_transformed" --gene-expression --make-bod --out "$out_bod"
     osca --befile "$out_bod" --update-opi "$befile.opi"
 else
