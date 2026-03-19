@@ -55,7 +55,7 @@ echo "Start bod_qc.sh"
 echo "Finish bod_qc.sh"
 
 "$SH_UTILS_DIR/std_bod.sh" \
-    --befile "$afc_900_befile" \
+    --befile "$qc_bod" \
     --out-bod "$std_bod"
 
 osca \
