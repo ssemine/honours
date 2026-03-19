@@ -3,7 +3,7 @@
 source /home/s4693165/honours/config/paths.conf
 source "$SLURM_CONF"
 
-initial_befile="$GENE_EXP_BFILE"
+initial_befile="$GENE_EXP_DATA"
 auto_gene_list="$GENE_EXP_AUTO_GENE_LIST"
 auto_befile="$GENE_EXP_AUTO_DATA"
 pheno_map="$PHENO_MAP"
