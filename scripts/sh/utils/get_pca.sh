@@ -18,8 +18,8 @@ module load "$OSCA_MODULE"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
-		--befile)
-			befile="$2"
+		--trm)
+			trm="$2"
 			shift 2
 			;;
 		--n-pca)
@@ -38,6 +38,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 osca \
-	--befile "$befile" \
+	--orm "$trm" \
 	--pca "$n_pca" \
 	--out "$out_pca"

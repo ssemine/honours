@@ -31,7 +31,13 @@ pca_data="$COVAR_DIR/pca_${trm_cutoff}"
 excl_iids="$GENE_EXP_PREPROCESSED_DIR/excl_iids_trm_${trm_cutoff}.list"
 
 osca \
-	--befile "$GENE_EXP_STD_DATA" \
+    --befile "$GENE_EXP_STD_DATA" \
+    --orm-cutoff "$trm_cutoff" \
+    --make-orm \
+    --out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}_tmp"
+
+osca \
+	--orm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}_tmp" \
     --orm-cutoff "$trm_cutoff" \
 	--make-orm \
 	--out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}"
@@ -58,7 +64,7 @@ osca \
     --out-pheno "$oreml_pheno_data"
 
 "$SH_UTILS_DIR/get_pca.sh" \
-    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
+    --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
     --out-pca "$pca_data" \
     --n-pca "$n_pca"
 
