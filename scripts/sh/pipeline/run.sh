@@ -63,6 +63,11 @@ osca \
     --out-pca "$pca_data" \
     --n-pca "$n_pca"
 
+"$SH_UTILS_DIR/run_oreml.sh" \
+        --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
+        --out "$RESULTS_DIR/tblup_final_${trm_cutoff}" \
+        --pheno "$oreml_pheno_data"
+
 for ((pca=1; pca<=n_pca; pca++)); do
     "$SH_UTILS_DIR/run_oreml.sh" \
         --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
