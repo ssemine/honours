@@ -11,7 +11,7 @@ input_file <- args[which(args == "--input") + 1]
 output_file <- args[which(args == "--output") + 1]
 
 cat("Reading input file:", input_file, "\n")
-dt <- fread(input_file, sep = "\t", header = TRUE, data.table = TRUE) # segfaults here
+dt <- fread(input_file, sep = " ", header = TRUE, data.table = TRUE) # segfaults here
 
 gene_cols <- setdiff(names(dt), c("IID", "FID"))
 
