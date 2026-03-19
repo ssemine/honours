@@ -39,6 +39,6 @@ dt[, (gene_cols) := lapply(.SD, function(x) {
 }), .SDcols = gene_cols]
 
 cat("Writing output to:", output_file, "\n")
-fwrite(dt, output_file, sep = " ")
+fwrite(dt, output_file, sep = "\t")
 
 cat("Done!\n")
