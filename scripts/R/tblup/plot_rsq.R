@@ -1,27 +1,36 @@
 library(tidyverse)
 
-rsq_dir <- "/scratch/user/s4693165/gene_exp_data/final"
-rsq_files <- list.files(rsq_dir, pattern = "\\.rsq$", full.names = TRUE)
+# --- Hardcoded input files ---
+input_files <- c(
+)
 
-read_rsq_h2 <- function(f) {
+# --- Output file ---
+output_file <- "/scratch/user/s4693165/results/herit_plot.pdf"
+
+# --- Read each .rsq and extract V(O)/Vp ---
+herit_df <- map_dfr(input_files, function(f) {
   df <- read.table(f, header = TRUE, sep = "", stringsAsFactors = FALSE, fill = TRUE)
   h2 <- df$Variance[df$Source == "V(O)/Vp"]
-  se <- df$SE[df$Source == "V(O)/Vp"]  # optional, for error bars
-  trm_cutoff <- gsub(".*_(0\\.[0-9]+)\\.rsq", "\\1", basename(f))
+  se <- df$SE[df$Source == "V(O)/Vp"]
   tibble(File = basename(f),
-         trm_cutoff = as.numeric(trm_cutoff),
-         h2 = h2,
-         SE = se)
-}
+         h2 = as.numeric(h2),
+         SE = as.numeric(se))
+})
 
-herit_df <- map_dfr(rsq_files, read_rsq_h2)
+# Optional: numeric index for plotting
+herit_df <- herit_df %>% mutate(Index = 1:n())
 
-# Plot with optional error bars
-ggplot(herit_df, aes(x = trm_cutoff, y = h2)) +
-  geom_point() +
+# --- Plot ---
+p <- ggplot(herit_df, aes(x = Index, y = h2)) +
+  geom_point(size = 3) +
   geom_line(group = 1) +
-  geom_errorbar(aes(ymin = h2 - SE, ymax = h2 + SE), width = 0.01, alpha = 0.5) +
+  geom_errorbar(aes(ymin = h2 - SE, ymax = h2 + SE), width = 0.2, alpha = 0.5) +
   theme_minimal() +
-  labs(title = "Heritability vs TRM cutoff",
-       x = "TRM cutoff",
-       y = expression(h^2))
+  scale_x_continuous(breaks = herit_df$Index, labels = herit_df$File) +
+  labs(x = "Input file", y = expression(h^2), title = "Heritability (V(O)/Vp) across files") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# --- Save plot ---
+ggsave(output_file, p, width = 8, height = 5)
+
+cat("Plot saved to:", output_file, "\n")
