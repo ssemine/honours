@@ -32,7 +32,11 @@ dt <- fread(input_file)
 gene_cols <- setdiff(names(dt), c("IID", "FID"))
 
 cat("Applying log2(CPM + 1) transformation...\n")
-dt[, (gene_cols) := lapply(.SD, function(x) log2(x + 1)), .SDcols = gene_cols]
+dt[, (gene_cols) := lapply(.SD, function(x) {
+  x <- as.numeric(x)
+  x[is.na(x)] <- 0
+  log2(x + 1)
+}), .SDcols = gene_cols]
 
 cat("Writing output to:", output_file, "\n")
 fwrite(dt, output_file, sep = " ")
