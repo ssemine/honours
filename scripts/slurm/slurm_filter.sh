@@ -16,21 +16,6 @@ no_na_befile="$GENE_EXP_FILTER_BOD_NA_PHENO_DATA"
 afc_900_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
 std_befile="$GENE_EXP_STD_DATA"
 
-args_arr=( \
-  --initial-befile "$initial_befile" \
-  --auto-gene-list "$auto_gene_list" \
-  --auto-befile "$auto_befile" \
-  --pheno-map "$pheno_map" \
-  --pheno "$pheno_file" \
-  --excl-iids-not-shared "$excl_iids_not_shared" \
-  --shared-befile "$shared_befile" \
-  --shared-pheno "$shared_pheno" \
-  --iid-pheno "$iid_pheno" \
-  --no-na-befile "$no_na_befile" \
-  --afc-900-befile "$afc_900_befile" \
-  --std-befile "$std_befile" \
-)
-
 sbatch \
   --account="$ACCOUNT_STRING" \
   --partition="$PARTITION" \
@@ -40,4 +25,16 @@ sbatch \
   --output="$LOGS_TBLUP_DIR/%x_%j.out" \
   --error="$LOGS_TBLUP_DIR/%x_%j.err" \
   --job-name="bod_assembly" \
-  --wrap="/home/s4693165/honours/scripts/sh/pipeline/filter.sh ${args_arr[@]}"
+  --wrap="/home/s4693165/honours/scripts/sh/pipeline/filter.sh \
+--initial-befile $initial_befile \
+--auto-gene-list $auto_gene_list \
+--auto-befile $auto_befile \
+--pheno-map $pheno_map \
+--pheno $pheno_file \
+--excl-iids-not-shared $excl_iids_not_shared \
+--shared-befile $shared_befile \
+--shared-pheno $shared_pheno \
+--iid-pheno $iid_pheno \
+--no-na-befile $no_na_befile \
+--afc-900-befile $afc_900_befile \
+--std-befile $std_befile"
