@@ -47,6 +47,9 @@ missing_ratio_probe=0.05
 
 
 # add filtering by PCA1
+"$R_SCRIPTS_DIR/tblup/utils/filter_pca1.R" --input "$initial_befile" --thresh -150 > "$INTERMEDIATE_DIR/pca1_excl_iids.list"
+osca --befile "$initial_befile" --remove "$INTERMEDIATE_DIR/pca1_excl_iids.list" --make-bod "$initial_befile.tmp"
+initial_befile="$initial_befile.tmp"
 
 echo "Start bod_qc.sh"
 "$SH_PIPE_DIR/bod_qc.sh" \
@@ -62,6 +65,7 @@ echo "Finish bod_qc.sh"
     --befile "$qc_bod" \
     --out-bod "$std_bod"
 
+# doesn't work as intended, keep for now
 osca \
     --befile "$std_bod" \
     --orm-cutoff "$trm_cutoff" \
