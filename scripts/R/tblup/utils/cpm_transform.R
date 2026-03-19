@@ -1,3 +1,4 @@
+# Install data.table if not present
 if (!requireNamespace("data.table", quietly = TRUE)) {
   cat("data.table not found, installing...\n")
   install.packages("data.table", repos = "https://cloud.r-project.org")
@@ -27,11 +28,20 @@ if (is.null(input_file) || is.null(output_file)) {
 }
 
 cat("Reading input file:", input_file, "\n")
-dt <- fread(input_file, sep = " ", header = TRUE, fill = TRUE, data.table = TRUE)
+
+dt <- fread(
+  input_file,
+  sep = "",       # whitespace-separated
+  header = TRUE,
+  data.table = TRUE,
+  stringsAsFactors = FALSE,  # safety
+  showProgress = TRUE
+)
 
 gene_cols <- setdiff(names(dt), c("IID", "FID"))
 
 cat("Applying log2(CPM + 1) transformation...\n")
+
 dt[, (gene_cols) := lapply(.SD, function(x) {
   x <- suppressWarnings(as.numeric(x))
   x[is.na(x) | is.nan(x) | is.infinite(x)] <- 0
@@ -39,6 +49,7 @@ dt[, (gene_cols) := lapply(.SD, function(x) {
 }), .SDcols = gene_cols]
 
 cat("Writing output to:", output_file, "\n")
+
 write.table(
   dt,
   file = output_file,

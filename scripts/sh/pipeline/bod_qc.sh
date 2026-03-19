@@ -46,6 +46,8 @@ done
 if [ "$qc" = true ]; then
     osca --befile "$befile" --sd-min "$sd_min" --make-bod --out "$befile.sdmin"
     osca --befile "$befile.sdmin" --missing-ratio-probe "$missing_ratio_probe" --make-bod --out "$befile.mrp"
+    new_befile="$befile.mrp"
+    befile="$new_befile"
 fi
 
 txt_profile="$befile.txt"
