@@ -59,7 +59,6 @@ osca \
 
 "$SH_UTILS_DIR/get_pca.sh" \
     --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
-    --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
     --out-pca "$pca_data" \
     --n-pca "$n_pca"
 
