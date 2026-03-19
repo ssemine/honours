@@ -15,7 +15,7 @@ while [[ $# -gt 0 ]]; do
             befile="$2"
             shift 2
             ;;
-    	--log2_transform)
+    	--log2-transform)
             log2_transform=true
             shift 1
             ;;
@@ -33,7 +33,7 @@ done
 txt_profile="$INTERMEDIATE_DIR/$befile.txt"
 txt_profile_transformed="$INTERMEDIATE_DIR/$befile.transformed.txt"
 
-if log2_transform; then
+if $log2_transform; then
     osca --befile "$befile" --make-efile --out "$txt_profile"
     Rscript "/home/s4693165/honours/scripts/R/tblup/utils/cpm_transform.R" "$txt_profile" > "$txt_profile_transformed"
     osca --efile "$txt_profile_transformed" --gene-expression --make-bod --out "$out_bod"
