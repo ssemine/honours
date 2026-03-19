@@ -14,7 +14,7 @@ shared_pheno="$PHENO_FILTERED_DATA"
 iid_pheno="$PHENO_IID_DATA"
 no_na_befile="$GENE_EXP_FILTER_BOD_NA_PHENO_DATA"
 afc_900_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
-std-befile="$GENE_EXP_STD_DATA"
+std_befile="$GENE_EXP_STD_DATA"
 
 args="\
 --initial-befile $initial_befile \
