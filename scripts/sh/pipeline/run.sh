@@ -60,7 +60,6 @@ echo "Start bod_qc.sh"
     --qc \
     --sd-min "$sd_min" \
     --missing-ratio-probe "$missing_ratio_probe" \
-    --log2-transform \
     --out-bod "$qc_bod"
 echo "Finish bod_qc.sh"
 
