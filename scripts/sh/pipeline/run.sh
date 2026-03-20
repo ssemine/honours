@@ -58,6 +58,7 @@ echo "Start bod_qc.sh"
 "$SH_PIPE_DIR/bod_qc.sh" \
     --befile "$initial_befile" \
     --qc \
+    --log2-transform \
     --sd-min "$sd_min" \
     --missing-ratio-probe "$missing_ratio_probe" \
     --out-bod "$qc_bod"
