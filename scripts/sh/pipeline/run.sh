@@ -91,15 +91,15 @@ rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
 
 # Outlier filtering
 
-#"$SH_PIPE_DIR/filter_trm_outliers.sh" \
-#    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
-#    --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
-#    --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
-#    --excl-iids "$excl_iids"
+"$SH_PIPE_DIR/filter_trm_outliers.sh" \
+    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
+    --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
+    --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
+    --excl-iids "$excl_iids"
 
-cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.bod" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.bod"
-cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.opi" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.opi"
-cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.oii" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii"
+#cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.bod" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.bod"
+#cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.opi" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.opi"
+#cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.oii" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii"
 
 # Final TRM assembly
 "$SH_PIPE_DIR/trm.sh" \
