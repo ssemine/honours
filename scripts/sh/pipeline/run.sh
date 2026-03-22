@@ -66,6 +66,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
 if [ "${#covars[@]}" -gt 0 ]; then
     covar_prefix=$(IFS=_ ; echo "${covars[*]}")
 else
@@ -78,6 +79,12 @@ else
     pca_prefix=""
 fi
 
+if [ "$log2_transform" = true ]; then
+    log_prefix="log_"
+else
+    log_prefix=""
+fi
+
 dir_suffix=""
 if [ -n "$covar_prefix" ] && [ -n "$pca_prefix" ]; then
     dir_suffix="${covar_prefix}_${pca_prefix}"
@@ -88,11 +95,11 @@ elif [ -n "$pca_prefix" ]; then
 fi
 
 if [ -n "$dir_suffix" ]; then
-    intermediate_dir="$INTERMEDIATE_DIR/cut_${trm_cutoff}_$dir_suffix"
-    results_dir="$RESULTS_DIR/cut_${trm_cutoff}_$dir_suffix"
+    intermediate_dir="$INTERMEDIATE_DIR/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
+    results_dir="$RESULTS_DIR/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
 else
-    intermediate_dir="$INTERMEDIATE_DIR/cut_$trm_cutoff"
-    results_dir="$RESULTS_DIR/cut_${trm_cutoff}"
+    intermediate_dir="$INTERMEDIATE_DIR/${log_prefix}cut_$trm_cutoff"
+    results_dir="$RESULTS_DIR/${log_prefix}cut_${trm_cutoff}"
 fi
 
 covars_dir="$intermediate_dir/covars"

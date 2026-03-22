@@ -2,6 +2,7 @@
 
 source /home/s4693165/honours/config/paths.conf
 source "$SLURM_CONF"
+source "$PHENO_CONF"
 
 for n in $(seq 0.00 0.05 1.00); do
 	sbatch \

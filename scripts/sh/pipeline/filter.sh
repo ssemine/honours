@@ -89,9 +89,9 @@ gawk '
         next
     }
     {
-        if ($7 ~ /^[0-9]+$/) {        # numeric value
+        if ($7 ~ /^[0-9]+$/) {    
             bin = ($7 == 0) ? 0 : 1
-        } else {                       # non-numeric (e.g., NA)
+        } else {                       
             bin = "NA"
         }
         print $0, bin
