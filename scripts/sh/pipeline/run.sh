@@ -12,6 +12,7 @@ log2_transform=true
 qc=true
 iqr=false
 pc1=false
+use_covar=false
 sd_min=0.02
 missing_ratio_probe=0.05
 
@@ -54,9 +55,12 @@ while [[ $# -gt 0 ]]; do
             pc1=true
             shift 1
             ;;
-        --covar)
-            covar="$2"
-            read -a covars <<< "$covar"
+        --use-covar)
+            use_covar=true
+            shift 2
+            ;;
+        --covar-idx-file)
+            covar_idx_file="$2"
             shift 2
             ;;
         *)
@@ -66,6 +70,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if [ "$use_covar" = true ]; then
+    source "$covar_idx_file" # sources covars variable, ignored by git
+    if [ ! -s "$covar_file" ]; then
+        echo -e "\nCovar file does not exist or empty\n"
+    fi
+fi
 
 if [ "${#covars[@]}" -gt 0 ]; then
     covar_prefix=$(IFS=_ ; echo "${covars[*]}")
@@ -73,7 +83,7 @@ else
     covar_prefix=""
 fi
 
-if [ -n "${n_pca:-}" ]; then
+if [ -n "$n_pca" ]; then
     pca_prefix="pca${n_pca}"
 else
     pca_prefix=""

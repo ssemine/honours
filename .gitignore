@@ -5,6 +5,7 @@ data/
 
 # private config
 config/slurm_var.conf
+scripts/slurm/covars.list
 
 # R files
 scripts/R/.Rdata
