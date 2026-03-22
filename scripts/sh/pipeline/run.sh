@@ -4,6 +4,7 @@ source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 source "$R_CONF"
 source "$SH_UTILS_DIR/helper_functions.sh"
+source "$PHENO_CONF"
 
 module load "$OSCA_MODULE"
 module load "$R_MODULE"
@@ -55,7 +56,12 @@ while [[ $# -gt 0 ]]; do
             pc1=true
             shift 1
             ;;
-        --use-covar)
+        --covars)
+            covars="$2"
+            read -a covars <<< "$covar"
+            shift 2
+            ;;
+        --use-covar-idx-file)
             use_covar=true
             shift 1
             ;;
@@ -72,7 +78,7 @@ done
 
 if [ "$use_covar" = true ]; then
     source "$covar_idx_file" # sources covars variable, ignored by git
-    if [ ! -s "$covar_file" ]; then
+    if [ ! -s "$covar_idx_file" ]; then
         echo -e "\nCovar file does not exist or empty\n"
     fi
 fi
