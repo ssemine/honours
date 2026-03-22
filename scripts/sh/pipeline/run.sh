@@ -10,6 +10,7 @@ module load "$R_MODULE"
 log2_transform=true
 qc=true
 iqr=false
+pc1=false
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --n-pca)
@@ -32,6 +33,15 @@ while [[ $# -gt 0 ]]; do
             iqr=true
             shift 1
             ;;
+        --pc1)
+            pc1=true
+            shift 1
+            ;;
+        --covar)
+            covar="$2"
+            read -a covars <<< "$covar"
+            shift 2
+            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -52,12 +62,26 @@ sd_min=0.02
 missing_ratio_probe=0.05
 # add all these params to the caller func
 
+if [[ "$iqr" = true ]]; then
+    osca \
+        --befile "$initial_befile" \
+        --make-efile \
+        --out "$initial_befile.txt"
 
-# add filtering by PCA1
-#osca --befile "$initial_befile" --make-efile --out "$initial_befile.txt"
-#Rscript "$R_SCRIPTS_DIR/tblup/utils/filter_pca1.R" --input "$initial_befile.txt" --thresh -150 > "$INTERMEDIATE_DIR/pca1_excl_iids.list"
-#osca --befile "$initial_befile" --remove "$INTERMEDIATE_DIR/pca1_excl_iids.list" --make-bod --out "$initial_befile.tmp"
-#initial_befile="$initial_befile.tmp"
+    Rscript \
+        "$R_SCRIPTS_DIR/tblup/utils/filter_pca1.R" \
+        --input "$initial_befile.txt" \
+        --thresh -150 \
+        > "$INTERMEDIATE_DIR/pca1_excl_iids.list"
+
+    osca \
+        --befile "$initial_befile" \
+        --remove "$INTERMEDIATE_DIR/pca1_excl_iids.list" \
+        --make-bod \
+        --out "$initial_befile.tmp"
+    
+    initial_befile="$initial_befile.tmp"
+fi
 
 echo "Start bod_qc.sh"
 "$SH_PIPE_DIR/bod_qc.sh" \
