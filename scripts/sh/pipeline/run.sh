@@ -300,11 +300,11 @@ if [ -n "$n_pca" ]; then
         gawk '
             FNR==NR {pca[$1]=$0; next} 
             $1 in pca {
-                split($0,a," "); 
-                split(pca[$1],b," "); 
-                out=a[1];                
+                split($0,a," ") 
+                split(pca[$1],b," ") 
+                out=a[1]                
                 for(i=2;i<=length(a);i++) out=out" "a[i];
-                for(i=2;i<=length(b);i++) out=out" "b[i];
+                for(i=3;i<=length(b);i++) out=out" "b[i];
                 print out
             }
         ' "$pca_data.eigenvec" "$qcovar_file" > "$qcovar_file.tmp"
