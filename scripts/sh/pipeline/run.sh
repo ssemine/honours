@@ -9,6 +9,7 @@ module load "$R_MODULE"
 
 log2_transform=true
 qc=true
+iqr=false
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --n-pca)
@@ -25,6 +26,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --qc)
             qc=true
+            shift 1
+            ;;
+        --iqr)
+            iqr=true
             shift 1
             ;;
         *)
@@ -91,15 +96,17 @@ rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
 
 # Outlier filtering
 
-"$SH_PIPE_DIR/filter_trm_outliers.sh" \
-    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
-    --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
-    --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
-    --excl-iids "$excl_iids"
-
-#cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.bod" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.bod"
-#cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.opi" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.opi"
-#cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.oii" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii"
+if [[ "$iqr" = true ]]; then
+    "$SH_PIPE_DIR/filter_trm_outliers.sh" \
+        --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
+        --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
+        --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
+        --excl-iids "$excl_iids"
+else
+    cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.bod" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.bod"
+    cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.opi" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.opi"
+    cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.oii" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii"
+fi
 
 # Final TRM assembly
 "$SH_PIPE_DIR/trm.sh" \
