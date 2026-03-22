@@ -3,6 +3,7 @@
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 source "$R_CONF"
+source "$SH_UTILS_DIR/helper_functions.sh"
 
 module load "$OSCA_MODULE"
 module load "$R_MODULE"
@@ -11,8 +12,24 @@ log2_transform=true
 qc=true
 iqr=false
 pc1=false
+sd_min=0.02
+missing_ratio_probe=0.05
+
+initial_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
+initial_pheno="$PHENO_IID_DATA"
+categorical_covar_indices=($CG_IDX $MATE_IN_DATE_IDX $CALF_SEX_IDX $YEAR_MATE_IDX $HEF_PREG_SUCCESS_IDX)
+quantitative_covar_indices=($HEIFER_AGE_JOINING_IDX $HEF_WKS_PREG_IDX)
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        --befile)
+            initial_befile="$2"
+            shift 2
+            ;;
+        --pheno)
+            initial_pheno="$2"
+            shift 2
+            ;;
         --n-pca)
             n_pca="$2"
             shift 2
@@ -49,122 +66,251 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-mkdir -p "$GENE_EXP_PREPROCESSED_DIR"
-mkdir -p "$GENE_EXP_FINAL_DIR"
+if [ "${#covars[@]}" -gt 0 ]; then
+    covar_prefix=$(IFS=_ ; echo "${covars[*]}")
+else
+    covar_prefix=""
+fi
+
+if [ -n "${n_pca:-}" ]; then
+    pca_prefix="pca${n_pca}"
+else
+    pca_prefix=""
+fi
+
+dir_suffix=""
+if [ -n "$covar_prefix" ] && [ -n "$pca_prefix" ]; then
+    dir_suffix="${covar_prefix}_${pca_prefix}"
+elif [ -n "$covar_prefix" ]; then
+    dir_suffix="$covar_prefix"
+elif [ -n "$pca_prefix" ]; then
+    dir_suffix="$pca_prefix"
+fi
+
+if [ -n "$dir_suffix" ]; then
+    intermediate_dir="$INTERMEDIATE_DIR/cut_${trm_cutoff}_$dir_suffix"
+    results_dir="$RESULTS_DIR/cut_${trm_cutoff}_$dir_suffix"
+else
+    intermediate_dir="$INTERMEDIATE_DIR/cut_$trm_cutoff"
+    results_dir="$RESULTS_DIR/cut_${trm_cutoff}"
+fi
+
+covars_dir="$intermediate_dir/covars"
+
+mkdir -p "$covars_dir"
+mkdir -p "$intermediate_dir"
+mkdir -p "$results_dir"
 
 oreml_pheno_data="$RESULTS_DIR/oreml_pheno_data_${trm_cutoff}.phen"
-pca_data="$COVAR_DIR/pca_${trm_cutoff}"
-excl_iids="$GENE_EXP_PREPROCESSED_DIR/excl_iids_trm_${trm_cutoff}.list"
-initial_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
-qc_bod="$GENE_EXP_PREPROCESSED_DIR/qc_befile_${trm_cutoff}"
-std_bod="$GENE_EXP_PREPROCESSED_DIR/std_befile_${trm_cutoff}"
-sd_min=0.02
-missing_ratio_probe=0.05
-# add all these params to the caller func
+pca_data="$intermediate_dir/pca_${trm_cutoff}"
+excl_iids="$intermediate_dir/excl_iids_trm_${trm_cutoff}.list"
+qc_bod="$intermediate_dir/qc_befile_${trm_cutoff}"
+std_bod="$intermediate_dir/std_befile_${trm_cutoff}"
+final_befile="$results_dir/final_befile"
+final_befile_tmp="$intermediate_dir/final_befile_tmp"
+qcovar_file="$results_dir/qcovar.qcovar"
+covar_file="$results_dir/covar.covar"
 
-if [[ "$iqr" = true ]]; then
+
+# folder hierarchy scratch intermediate/cut/covars folders inside: pheno, trm, bod ?
+
+# folder hierarchy scratch results/cut/covars (name)/n_pca folders inside: pheno, trm, oreml (.rsq files)
+
+
+if [[ "$pc1" = true ]]; then
+    echo -e "\n--pc1=true ...\n"
+
+    echo -e "\nMaking efile ...\n"
     osca \
         --befile "$initial_befile" \
         --make-efile \
         --out "$initial_befile.txt"
 
+    echo -e "\nRunning filter_pca1.R ...\n"
     Rscript \
         "$R_SCRIPTS_DIR/tblup/utils/filter_pca1.R" \
         --input "$initial_befile.txt" \
         --thresh -150 \
-        > "$INTERMEDIATE_DIR/pca1_excl_iids.list"
+        > "$intermediate_dir/pca1_excl_iids.list"
 
+    echo -e "\nFiltering BOD by PC1"
     osca \
         --befile "$initial_befile" \
-        --remove "$INTERMEDIATE_DIR/pca1_excl_iids.list" \
+        --remove "$intermediate_dir/pca1_excl_iids.list" \
         --make-bod \
         --out "$initial_befile.tmp"
     
+    echo -e "\n$initial_befile <- $initial_befile.tmp"
     initial_befile="$initial_befile.tmp"
 fi
 
-echo "Start bod_qc.sh"
-"$SH_PIPE_DIR/bod_qc.sh" \
-    --befile "$initial_befile" \
-    --qc \
-    --log2-transform \
-    --sd-min "$sd_min" \
-    --missing-ratio-probe "$missing_ratio_probe" \
-    --out-bod "$qc_bod"
-echo "Finish bod_qc.sh"
+echo -e "\nRunning bod_qc.sh ...\n"
+if [ "$qc" = true ] && [ "$log2_transform" = true ]; then
+    "$SH_PIPE_DIR/bod_qc.sh" \
+        --befile "$initial_befile" \
+        --qc \
+        --log2-transform \
+        --sd-min "$sd_min" \
+        --missing-ratio-probe "$missing_ratio_probe" \
+        --out-bod "$qc_bod"
+elif [ "$qc" = true ]; then
+    "$SH_PIPE_DIR/bod_qc.sh" \
+        --befile "$initial_befile" \
+        --qc \
+        --sd-min "$sd_min" \
+        --missing-ratio-probe "$missing_ratio_probe" \
+        --out-bod "$qc_bod"
+elif [ "$log2_transform" = true ]; then
+    "$SH_PIPE_DIR/bod_qc.sh" \
+        --befile "$initial_befile" \
+        --log2-transform \
+        --sd-min "$sd_min" \
+        --missing-ratio-probe "$missing_ratio_probe" \
+        --out-bod "$qc_bod"
+else
+    "$SH_PIPE_DIR/bod_qc.sh" \
+        --befile "$initial_befile" \
+        --out-bod "$qc_bod"
+fi
+echo -e "\nFinish bod_qc.sh\n"
 
+echo -e "\nRunning std_bod.sh ...\n"
 "$SH_UTILS_DIR/std_bod.sh" \
     --befile "$qc_bod" \
     --out-bod "$std_bod"
+echo -e "\nFinish std_bod.sh\n"
 
-# doesn't work as intended, keep for now
+# WORKS. #    --orm-cutoff "$trm_cutoff" add if does not work
 osca \
     --befile "$std_bod" \
-    --orm-cutoff "$trm_cutoff" \
     --make-orm \
-    --out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}_tmp"
+    --out "$intermediate_dir/trm_900_${trm_cutoff}_tmp"
 
 osca \
-	--orm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}_tmp" \
+	--orm "$intermediate_dir/trm_900_${trm_cutoff}_tmp" \
     --orm-cutoff "$trm_cutoff" \
 	--make-orm \
-	--out "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}"
+	--out "$intermediate_dir/trm_900_${trm_cutoff}"
 
-cp "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.orm.id" "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
+cp "$intermediate_dir/trm_900_${trm_cutoff}.orm.id" "$intermediate_dir/trm_900_${trm_cutoff}.list"
 osca \
     --befile "$std_bod" \
-    --keep "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list" \
+    --keep "$intermediate_dir/trm_900_${trm_cutoff}.list" \
     --make-bod \
-    --out "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp"
-rm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}.list"
-
-# Outlier filtering
+    --out "$final_befile_tmp"
+rm "$intermediate_dir/trm_900_${trm_cutoff}.list"
 
 if [[ "$iqr" = true ]]; then
     "$SH_PIPE_DIR/filter_trm_outliers.sh" \
-        --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp" \
-        --trm "$INTERMEDIATE_DIR/trm_900_${trm_cutoff}" \
-        --out-bod "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
+        --befile "$final_befile_tmp" \
+        --trm "$intermediate_dir/trm_900_${trm_cutoff}" \
+        --out-bod "$final_befile" \
         --excl-iids "$excl_iids"
 else
-    cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.bod" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.bod"
-    cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.opi" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.opi"
-    cp "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}_tmp.oii" "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii"
+    cp "$final_befile_tmp.bod" "$final_befile.bod"
+    cp "$final_befile_tmp.opi" "$final_befile.opi"
+    cp "$final_befile_tmp.oii" "$final_befile.oii"
 fi
 
-# Final TRM assembly
-"$SH_PIPE_DIR/trm.sh" \
-    --befile "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}" \
-    --trm-cutoff "$trm_cutoff" \
-    --out-trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}"
+
+if [ "${#covars[@]}" -gt 0 ]; then
+    echo -e "\nRunning get_covars.sh ...\n"
+    covar_tmp="$covars_dir/tmp"
+    for covar_idx in "${covars[@]}"; do
+        if in_array "$covar_idx" "${quantitative_covar_indices[@]}"; then
+            used_covar_file="$qcovar_file"
+        elif in_array "$covar_idx" "${categorical_covar_indices[@]}"; then
+            used_covar_file="$covar_file"
+        else
+            echo -e "\nError: no match in covar indices\n"
+            exit 1
+        fi
+        "$SH_UTILS_DIR/get_covar.sh" \
+            --pheno-file "$initial_pheno" \
+            --iid-idx 1 \
+            --covar-idx "$covar_idx" \
+            --oii "$final_befile.oii" \
+            --out "$covar_tmp"
+        
+        covar_keep_iids="$intermediate_dir/covar_keep.list"
+        gawk '{ print $1, $2 }' "$covar_tmp" > "$covar_keep_iids"
+        if [ ! -s "$used_covar_file" ]; then
+            cp "$covar_tmp" "$used_covar_file"
+        else
+            gawk '
+                FNR==NR {a[$1]=$NF; next}
+                ($1 in a) {print $0, a[$1]}
+            ' "$covar_tmp" "$used_covar_file" > "$used_covar_file.tmp"
+            mv "$used_covar_file.tmp" "$used_covar_file"
+        fi
+        osca \
+            --befile "$final_befile" \
+            --keep "$covar_keep_iids" \
+            --make-bod \
+            --out "$final_befile_tmp"
+        cp "$final_befile_tmp.bod" "$final_befile.bod"
+        cp "$final_befile_tmp.opi" "$final_befile.opi"
+        cp "$final_befile_tmp.oii" "$final_befile.oii"
+    done 
+fi
+
+# Final TRM
+osca \
+	--befile "$final_befile" \
+	--make-orm \
+	--orm-cutoff "$trm_cutoff" \
+	--out "$results_dir/trm"
 
 "$SH_UTILS_DIR/get_oreml_pheno.sh" \
-    --oii "$GENE_EXP_FINAL_DIR/final_${trm_cutoff}.oii" \
-    --pheno-iid "$PHENO_IID_DATA" \
+    --oii "$final_befile.oii" \
+    --pheno-iid "$initial_pheno" \
     --out-pheno "$oreml_pheno_data"
 
-"$SH_UTILS_DIR/get_pca.sh" \
-    --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
-    --out-pca "$pca_data" \
-    --n-pca "$n_pca"
+if [ -n "$n_pca" ]; then
+    "$SH_UTILS_DIR/get_pca.sh" \
+        --trm "$results_dir/trm" \
+        --out-pca "$pca_data" \
+        --n-pca "$n_pca"
+    if [ ! -s "$qcovar_file" ]; then
+        cp "$pca_data.eigenvec" "$qcovar_file"
+    else
+        gawk '
+            FNR==NR {pca[$1]=$0; next} 
+            $1 in pca {
+                split($0,a," "); 
+                split(pca[$1],b," "); 
+                out=a[1];                
+                for(i=2;i<=length(a);i++) out=out" "a[i];
+                for(i=2;i<=length(b);i++) out=out" "b[i];
+                print out
+            }
+        ' "$pca_data.eigenvec" "$qcovar_file" > "$qcovar_file.tmp"
+        mv "$qcovar_file.tmp" "$qcovar_file"
+    fi
+fi
 
-# add more covars, like cg, year
-
-"$SH_UTILS_DIR/run_oreml.sh" \
-        --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
-        --out "$RESULTS_DIR/tblup_final_${trm_cutoff}" \
-        --pheno "$oreml_pheno_data"
-
-for ((pca=1; pca<=n_pca; pca++)); do
-    pca_oreml="${pca_data}_${pca}"
-    gawk \
-        -f "$AWK_SCRIPTS_DIR/get_oreml_pca.awk" \
-        -v n="$pca" \
-        "$pca_data.eigenvec" \
-        > "$pca_oreml.qcovar"
+if [ -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
     "$SH_UTILS_DIR/run_oreml.sh" \
-        --trm "$TBLUP_TRM_DIR/final_trm_${trm_cutoff}" \
-        --qcovar-file "$pca_oreml.qcovar" \
-        --out "$RESULTS_DIR/tblup_final_${trm_cutoff}_pca_${pca}" \
-        --pheno "$oreml_pheno_data" 
-done
+    --trm "$results_dir/trm" \
+    --covar-file "$covar_file" \
+    --pheno "$oreml_pheno_data" \
+    --out "$results_dir/sol"
+elif [ ! -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
+    "$SH_UTILS_DIR/run_oreml.sh" \
+    --trm "$results_dir/trm" \
+    --qcovar-file "$qcovar_file" \
+    --pheno "$oreml_pheno_data" \
+    --out "$results_dir/sol"
+elif [ -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
+    "$SH_UTILS_DIR/run_oreml.sh" \
+    --trm "$results_dir/trm" \
+    --covar-file "$covar_file" \
+    --qcovar-file "$qcovar_file" \
+    --pheno "$oreml_pheno_data" \
+    --out "$results_dir/sol"
+elif [ ! -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
+    "$SH_UTILS_DIR/run_oreml.sh" \
+    --trm "$results_dir/trm" \
+    --out "$results_dir/sol" \
+    --pheno "$oreml_pheno_data"
+fi

@@ -26,7 +26,7 @@ while [[ $# -gt 0 ]]; do
 			shift 2
 			;;
 		--std-alg)
-            # --std-probe or --rint-probe or --m2beta or --beta2m
+            # --std-probe or --rint-probe
 			std_alg="$2"
 			shift 2
 			;;

@@ -8,6 +8,7 @@
 #   --pheno-file: Phenotype file
 #   --iid-idx: IID index
 #   --covar_idx: Covariate index
+#	--oii: OII file
 #   --out: Output file
 # Output files:
 #   Covariate file (.covar)
@@ -29,6 +30,10 @@ while [[ $# -gt 0 ]]; do
 			covar_idx="$2"
 			shift 2
 			;;
+		-oii)
+			oii_file="$2"
+			shift 2
+			;;
 		--out)
 			out="$2"
 			shift 2
@@ -44,5 +49,6 @@ gawk \
     -f "$AWK_SCRIPTS_DIR/get_covar.awk" \
     -v iid_idx="$iid_idx" \
     -v covar_idx="$covar_idx" \
+	"$oii_file" \
     "$pheno_file" \
     > "$out"

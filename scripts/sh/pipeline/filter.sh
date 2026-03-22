@@ -81,6 +81,20 @@ echo "Running filter_bod_pheno.sh ..."
     --pheno-map "$pheno_map" \
     --out "$iid_pheno"
 
+# adds columns add for stages
+gawk '
+    BEGIN {OFS="\t"}             
+    NR==1 {                       
+        print $0, "hef_wks_preg_bin"
+        next
+    }
+    {
+        bin = ($7 == 0) ? 0 : 1    
+        print $0, bin
+    }
+' "$iid_pheno" > "$iid_pheno.tmp"
+mv "$iid_pheno.tmp" "$iid_pheno"
+
 # Checks for NA values
 "$SH_UTILS_DIR/filter_iid_na.sh" \
     --befile "$shared_befile" \
