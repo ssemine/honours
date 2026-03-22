@@ -89,7 +89,11 @@ gawk '
         next
     }
     {
-        bin = ($7 == 0) ? 0 : 1    
+        if ($7 ~ /^[0-9]+$/) {        # numeric value
+            bin = ($7 == 0) ? 0 : 1
+        } else {                       # non-numeric (e.g., NA)
+            bin = "NA"
+        }
         print $0, bin
     }
 ' "$iid_pheno" > "$iid_pheno.tmp"
