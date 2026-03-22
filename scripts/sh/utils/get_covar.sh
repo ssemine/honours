@@ -30,7 +30,7 @@ while [[ $# -gt 0 ]]; do
 			covar_idx="$2"
 			shift 2
 			;;
-		-oii)
+		--oii)
 			oii_file="$2"
 			shift 2
 			;;
