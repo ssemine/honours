@@ -124,7 +124,7 @@ mkdir -p "$covars_dir"
 mkdir -p "$intermediate_dir"
 mkdir -p "$results_dir"
 
-oreml_pheno_data="$RESULTS_DIR/oreml_pheno_data_${trm_cutoff}.phen"
+oreml_pheno_data="$results_dir/oreml_pheno_data_${trm_cutoff}.phen"
 pca_data="$intermediate_dir/pca_${trm_cutoff}"
 excl_iids="$intermediate_dir/excl_iids_trm_${trm_cutoff}.list"
 qc_bod="$intermediate_dir/qc_befile_${trm_cutoff}"
