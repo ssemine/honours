@@ -8,7 +8,7 @@ source "$SH_UTILS_DIR/helper_functions.sh"
 module load "$OSCA_MODULE"
 module load "$R_MODULE"
 
-log2_transform=true
+log2_transform=false
 qc=true
 iqr=false
 pc1=false

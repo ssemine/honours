@@ -30,9 +30,12 @@ scores <- data.frame(iid_data, PC1 = pca_res$x[,1], PC2 = pca_res$x[,2])
 head(scores)
 
 # Simple scatter plot
-ggplot(scores, aes(x = PC1, y = PC2)) +
+p <- ggplot(scores, aes(x = PC1, y = PC2)) +
   geom_point(color = "blue", size = 2) +
   xlab(paste0("PC1 (", round(summary(pca_res)$importance[2,1]*100, 1), "%)")) +
   ylab(paste0("PC2 (", round(summary(pca_res)$importance[2,2]*100, 1), "%)")) +
   ggtitle("PCA of Final Gene Expression Matrix") +
   theme_minimal()
+
+o1 <- "~/honours/data/plots/tblup/pca_dis.png"
+ggsave(o1, p, width = 8, height = 5)

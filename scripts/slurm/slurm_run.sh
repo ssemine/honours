@@ -14,5 +14,5 @@ for n in $(seq 0.00 0.05 1.00); do
 		--output="$LOGS_TBLUP_DIR/%x_%j.out" \
 		--error="$LOGS_TBLUP_DIR/%x_%j.err" \
 		--job-name="oreml_${n}" \
-		--wrap="/home/s4693165/honours/scripts/sh/pipeline/run.sh --n-pca 4 --trm-cutoff ${n}"
+		--wrap="/home/s4693165/honours/scripts/sh/pipeline/run.sh --covar-idx-file /home/s4693165/honours/scripts/slurm/covars.list --n-pca 3 --trm-cutoff ${n} --use-covar"
 done

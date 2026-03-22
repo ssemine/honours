@@ -96,9 +96,9 @@ p3 <- pheatmap(
   fontsize_row = 10,
   fontsize_col = 10
 )
-o1 <- "~/honours/data/plots/tblup/offdiag_0.75_nolog_nopca.png"
-o2 <- "~/honours/data/plots/tblup/diag_0.75_nolog_nopca.png"
-o3 <- "~/honours/data/plots/tblup/phea_0.75_nolog_nopca.png"
+o1 <- "~/honours/data/plots/tblup/offdiag_0.75_nopca.png"
+o2 <- "~/honours/data/plots/tblup/diag_0.75_nopca.png"
+o3 <- "~/honours/data/plots/tblup/phea_0.75_nopca.png"
 ggsave(o1, p1, width = 8, height = 5)
 ggsave(o2, p2, width = 8, height = 5)
 ggsave(o3, p3, width = 8, height = 5)

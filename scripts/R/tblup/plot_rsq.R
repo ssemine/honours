@@ -10,7 +10,7 @@ input_files <- c(
 )
 
 # --- Output file ---
-output_file <- "~/honours/data/plots/tblup/reml_pca_4_nolog_no_pca.png"
+output_file <- "~/honours/data/plots/tblup/reml_pca_4_no_pca.png"
 
 # --- Read each .rsq and extract V(O)/Vp ---
 herit_df <- map_dfr(input_files, function(f) {
@@ -36,9 +36,6 @@ p <- ggplot(herit_df, aes(x = Index, y = h2)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # --- Save plot ---
-output_file1 <- "~/honours/data/plots/tblup/offdiag_0.75_nolog_nopca.png"
-output_file2 <- "~/honours/data/plots/tblup/diag_0.75_nolog_nopca.png"
-output_file3 <- "~/honours/data/plots/tblup/phea_0.75_nolog_nopca.png"
 ggsave(output_file, p, width = 8, height = 5)
 
 cat("Plot saved to:", output_file, "\n")
