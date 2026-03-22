@@ -26,7 +26,7 @@ while [[ $# -gt 0 ]]; do
             iid_idx="$2"
             shift 2
             ;;
-		--covar_idx)
+		--covar-idx)
 			covar_idx="$2"
 			shift 2
 			;;
