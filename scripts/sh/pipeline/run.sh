@@ -57,7 +57,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --use-covar)
             use_covar=true
-            shift 2
+            shift 1
             ;;
         --covar-idx-file)
             covar_idx_file="$2"
