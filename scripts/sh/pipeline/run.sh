@@ -19,7 +19,7 @@ missing_ratio_probe=0.05
 
 initial_befile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA"
 initial_pheno="$PHENO_IID_DATA"
-categorical_covar_indices=($CG_IDX $MATE_IN_DATE_IDX $CALF_SEX_IDX $YEAR_MATE_IDX $HEF_PREG_SUCCESS_IDX)
+categorical_covar_indices=($CG_IDX $MATE_IN_DATE_IDX $CALF_SEX_IDX $YEAR_MATE_IDX $HEF_PREG_SUCCESS_IDX $HEF_WKS_PREG_BIN_IDX)
 quantitative_covar_indices=($HEIFER_AGE_JOINING_IDX $HEF_WKS_PREG_IDX)
 
 while [[ $# -gt 0 ]]; do
