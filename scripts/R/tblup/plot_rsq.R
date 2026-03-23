@@ -1,42 +1,121 @@
-library(tidyverse)
+# Load required libraries
+library(ggplot2)
+library(dplyr)
+library(stringr)
 
-# --- Hardcoded input files ---
-input_files <- c(
-  "/scratch/user/s4693165/results/tblup_final_1.00_pca_4.rsq",
-  "/scratch/user/s4693165/results/tblup_final_0.75_pca_4.rsq",
-  "/scratch/user/s4693165/results/tblup_final_0.5_pca_4.rsq",
-  "/scratch/user/s4693165/results/tblup_final_0.25_pca_4.rsq",
-  "/scratch/user/s4693165/results/tblup_final_0.1_pca_4.rsq"
+# Set base directory
+base_dir <- "/scratch/user/s4693165/results"  # change if needed
+
+# Get directories, exclude *_pca1
+dirs <- list.dirs(base_dir, recursive = FALSE, full.names = TRUE)
+dirs <- dirs[!grepl("_pca1$", dirs)]
+
+# Storage
+all_data <- data.frame()
+
+for (d in dirs) {
+  
+  sol_file <- file.path(d, "sol.rsq")
+  if (!file.exists(sol_file)) next
+  
+  # Robust read
+  df <- tryCatch({
+    read.table(
+      sol_file,
+      header = TRUE,
+      sep = "",                 # auto-detect whitespace
+      fill = TRUE,              # handle uneven rows
+      strip.white = TRUE,
+      stringsAsFactors = FALSE,
+      comment.char = "",
+      blank.lines.skip = TRUE
+    )
+  }, error = function(e) {
+    message("Skipping (read error): ", sol_file)
+    return(NULL)
+  })
+  
+  if (is.null(df)) next
+  
+  # Ensure required columns exist
+  if (!all(c("Source", "Variance", "SE") %in% colnames(df))) {
+    message("Skipping (bad format): ", sol_file)
+    next
+  }
+  
+  # Clean possible whitespace issues
+  df$Source <- trimws(df$Source)
+  
+  # Extract V(O)/Vp row
+  vo_row <- df[df$Source == "V(O)/Vp", ]
+  if (nrow(vo_row) == 0) {
+    message("Skipping (no V(O)/Vp): ", sol_file)
+    next
+  }
+  
+  # Parse directory name
+  dir_name <- basename(d)
+  parts <- unlist(strsplit(dir_name, "_"))
+  
+  # Safety check
+  if (length(parts) < 3) {
+    message("Skipping (unexpected dir name): ", dir_name)
+    next
+  }
+  
+  cut_val <- suppressWarnings(as.numeric(parts[2]))
+  if (is.na(cut_val)) {
+    message("Skipping (bad cut value): ", dir_name)
+    next
+  }
+  
+  group_val <- paste(parts[-c(1,2)], collapse = "_")
+  
+  # Append
+  all_data <- rbind(all_data, data.frame(
+    cut = cut_val,
+    group = group_val,
+    variance = as.numeric(vo_row$Variance[1]),
+    se = as.numeric(vo_row$SE[1])
+  ))
+}
+
+# Remove any NA rows just in case
+all_data <- na.omit(all_data)
+
+# Sort for nicer plotting
+all_data <- all_data %>%
+  arrange(group, cut)
+
+# Factor for consistent legend ordering
+all_data$group <- factor(all_data$group, levels = unique(all_data$group))
+group_labels <- c(
+  "3" = "CG",
+  "5" = "Joining age",
+  "7" = "Foetal age",
+  "3_5" = "CG + Joining Age",
+  "3_7" = "CG + Foetal age",
+  "5_7" = "Joining Age",
+  "3_5_7" = "CG+Joining age+Foetal age"
 )
+all_data$group_label <- group_labels[as.character(all_data$group)]
 
-# --- Output file ---
-output_file <- "~/honours/data/plots/tblup/reml_pca_4_no_pca.png"
+# Make it a factor for consistent ordering
+all_data$group_label <- factor(all_data$group_label, levels = unique(group_labels))
+# Plot
+# Plot using the descriptive labels
+p <- ggplot(all_data, aes(x = cut, y = variance, color = group_label)) +
+  geom_point(size = 2.5) +
+  geom_line(aes(group = group_label), linewidth = 0.8) +
+  geom_errorbar(aes(ymin = variance - se, ymax = variance + se),
+                width = 0.01, linewidth = 0.5) +
+  labs(
+    x = "Cut",
+    y = "V(O)/Vp",
+    color = "Component",
+    title = "V(O)/Vp vs Cut"
+  ) +
+  theme_bw(base_size = 14)
 
-# --- Read each .rsq and extract V(O)/Vp ---
-herit_df <- map_dfr(input_files, function(f) {
-  df <- read.table(f, header = TRUE, sep = "", stringsAsFactors = FALSE, fill = TRUE)
-  h2 <- df$Variance[df$Source == "V(O)/Vp"]
-  se <- df$SE[df$Source == "V(O)/Vp"]
-  tibble(File = basename(f),
-         h2 = as.numeric(h2),
-         SE = as.numeric(se))
-})
-
-# Optional: numeric index for plotting
-herit_df <- herit_df %>% mutate(Index = 1:n())
-
-# --- Plot ---
-p <- ggplot(herit_df, aes(x = Index, y = h2)) +
-  geom_point(size = 3) +
-  geom_line(group = 1) +
-  geom_errorbar(aes(ymin = h2 - SE, ymax = h2 + SE), width = 0.2, alpha = 0.5) +
-  theme_bw() +
-  scale_x_continuous(breaks = herit_df$Index, labels = herit_df$File) +
-  labs(x = "Input file", y = expression(h^2), title = "V(T)/V(P)") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-# --- Save plot ---
-ggsave(output_file, p, width = 8, height = 5)
-
-cat("Plot saved to:", output_file, "\n")
+print(p)
 
