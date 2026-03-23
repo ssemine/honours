@@ -28,16 +28,11 @@ df_initial <- merge(mean_df_initial, var_df_initial, by = "probe")
 df_std <- merge(mean_df_std, var_df_std, by = "probe")
 df_final <- merge(mean_df_final, var_df_final, by = "probe")
 
-<<<<<<< HEAD
-ggplot(df_final, aes(x = abs(mean), y = variance)) +
-  geom_point(alpha = 1, color = "blue") +
-  geom_point(data = df_std, aes(x = abs(mean), y = variance), color="red", alpha=0.01) +
-  scale_x_log10() +
-=======
+
 p1 <- ggplot(df_initial, aes(x = mean, y = variance)) +
   geom_point(alpha = 0.3, color = "blue") +
   geom_point(data = df_final, aes(x = mean, y = variance), color="red", alpha=0.5) +
->>>>>>> fixed_bod_pipeline
+  
   labs(
     title = "",
     x = expression(mu),
