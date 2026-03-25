@@ -8,7 +8,7 @@ base_dir <- "/scratch/user/s4693165/results"  # change if needed
 
 # Get directories, exclude *_pca1
 dirs <- list.dirs(base_dir, recursive = FALSE, full.names = TRUE)
-dirs <- dirs[!grepl("_pca1$", dirs)]
+#dirs <- dirs[!grepl("_pca1$", dirs)]
 
 # Storage
 all_data <- data.frame()
@@ -64,7 +64,7 @@ for (d in dirs) {
   }
   
   cut_val <- suppressWarnings(as.numeric(parts[2]))
-  if (is.na(cut_val)) {
+  if (is.na(cut_val)) {ß
     message("Skipping (bad cut value): ", dir_name)
     next
   }

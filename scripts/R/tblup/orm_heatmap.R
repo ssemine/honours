@@ -9,7 +9,7 @@ setwd("/home/s4693165/honours/scripts/R")
 source("tblup/utils/read_orm.R")
 
 # ORM matrix initialisation
-orm_obj <- ReadORMBin("/scratch/user/s4693165/results/cut_0.75_5/trm")
+orm_obj <- ReadORMBin("/scratch/user/s4693165/results/cut_1.00/trm")
 n <- nrow(orm_obj$id)
 ORM_mat <- matrix(0, n, n)
 diag(ORM_mat) <- orm_obj$diag

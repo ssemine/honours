@@ -3,7 +3,7 @@ library(ggplot2)
 
 # Path to your final matrix (IID, FID, Genes)
 # Path to your final matrix (IID, FID, Genes)
-input_file <- "/scratch/user/s4693165/gene_exp_data/test.txt"
+input_file <- "/scratch/user/s4693165/results/cut_1.99/efile"
 
 # Read the data
 expr <- read.table(input_file, header = TRUE, sep = " ", check.names = FALSE, stringsAsFactors = FALSE)
