@@ -75,7 +75,7 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-
+:
 if [ "$use_covar" = true ]; then
     source "$covar_idx_file" # sources covars variable, ignored by git
     if [ ! -s "$covar_idx_file" ]; then
@@ -208,7 +208,8 @@ echo -e "\nRunning std_bod.sh ...\n"
 echo -e "\nFinish std_bod.sh\n"
 
 # WORKS. #    --orm-cutoff "$trm_cutoff" add if does not work
---befile "$std_bod" \
+osca \
+    --befile "$std_bod" \
     --make-orm \
     --out "$intermediate_dir/trm_900_${trm_cutoff}_tmp"
 if [ "$trm_cutoff" = "nocut" ]; then
