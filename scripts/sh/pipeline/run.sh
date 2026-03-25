@@ -162,6 +162,8 @@ if [[ "$pc1" = true ]]; then
         --remove "$intermediate_dir/pca1_excl_iids.list" \
         --make-bod \
         --out "$initial_befile.tmp"
+    "$SH_UTILS_DIR/fix_opi.sh" \
+        --opi "$initial_befile.tmp.opi"
     
     echo -e "\n$initial_befile <- $initial_befile.tmp"
     initial_befile="$initial_befile.tmp"
@@ -201,6 +203,8 @@ echo -e "\nRunning std_bod.sh ...\n"
 "$SH_UTILS_DIR/std_bod.sh" \
     --befile "$qc_bod" \
     --out-bod "$std_bod"
+"$SH_UTILS_DIR/fix_opi.sh" \
+    --opi "$std_bod.opi"
 echo -e "\nFinish std_bod.sh\n"
 
 # WORKS. #    --orm-cutoff "$trm_cutoff" add if does not work
@@ -221,6 +225,8 @@ osca \
     --keep "$intermediate_dir/trm_900_${trm_cutoff}.list" \
     --make-bod \
     --out "$final_befile_tmp"
+"$SH_UTILS_DIR/fix_opi.sh" \
+    --opi "$final_befile_tmp.opi"
 rm "$intermediate_dir/trm_900_${trm_cutoff}.list"
 
 if [[ "$iqr" = true ]]; then
@@ -257,6 +263,7 @@ if [ "${#covars[@]}" -gt 0 ]; then
         
         covar_keep_iids="$intermediate_dir/covar_keep.list"
         gawk '{ print $1, $2 }' "$covar_tmp" > "$covar_keep_iids"
+        
         if [ ! -s "$used_covar_file" ]; then
             cp "$covar_tmp" "$used_covar_file"
         else
@@ -266,11 +273,16 @@ if [ "${#covars[@]}" -gt 0 ]; then
             ' "$covar_tmp" "$used_covar_file" > "$used_covar_file.tmp"
             mv "$used_covar_file.tmp" "$used_covar_file"
         fi
+
         osca \
             --befile "$final_befile" \
             --keep "$covar_keep_iids" \
             --make-bod \
             --out "$final_befile_tmp"
+
+        "$SH_UTILS_DIR/fix_opi.sh" \
+            --opi "$final_befile_tmp.opi"
+
         cp "$final_befile_tmp.bod" "$final_befile.bod"
         cp "$final_befile_tmp.opi" "$final_befile.opi"
         cp "$final_befile_tmp.oii" "$final_befile.oii"
@@ -278,6 +290,8 @@ if [ "${#covars[@]}" -gt 0 ]; then
 fi
 
 # Final TRM
+"$SH_UTILS_DIR/fix_opi.sh" \
+    --opi "$final_befile.opi"
 osca \
 	--befile "$final_befile" \
 	--make-orm \

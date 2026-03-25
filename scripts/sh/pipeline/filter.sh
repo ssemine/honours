@@ -56,13 +56,15 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
+# Temp disabled, no sex chr in the analysis
 # Filters BOD for sex chromosomes
-echo "Running exclude_sex_chr.sh ..."
-"$SH_UTILS_DIR/exclude_sex_chr.sh" \
-    --befile "$initial_befile" \
-    --opi "$initial_befile.opi" \
-    --out-gene-list "$auto_gene_list" \
-    --out-bod "$auto_befile"
+#echo "Running exclude_sex_chr.sh ..."
+#"$SH_UTILS_DIR/exclude_sex_chr.sh" \
+#    --befile "$initial_befile" \
+#    --opi "$initial_befile.opi" \
+#    --out-gene-list "$auto_gene_list" \
+#    --out-bod "$auto_befile"
 
 # Filters BOD and phenotype files by excluding non-shared individuals 
 echo "Running filter_bod_pheno.sh ..."
@@ -74,6 +76,9 @@ echo "Running filter_bod_pheno.sh ..."
     --oii "$auto_befile.oii" \
     --out-bod "$shared_befile" \
     --out-pheno "$shared_pheno"
+
+"$SH_UTILS_DIR/fix_opi.sh" \
+    --opi "$shared_befile.opi" 
 
 # Filters BOD and phenotype files for NA values, specifically AFC
 "$SH_UTILS_DIR/barcode_to_iid.sh" \
@@ -102,9 +107,15 @@ mv "$iid_pheno.tmp" "$iid_pheno"
 # Checks for NA values
 "$SH_UTILS_DIR/filter_iid_na.sh" \
     --befile "$shared_befile" \
-    --out-bod "$no_na_befile" \
+    --out-bod "$no_na_befile"
+
+"$SH_UTILS_DIR/fix_opi.sh" \
+    --opi "$no_na_befile.opi" 
 
 # Filters for AFC < 900
 "$SH_UTILS_DIR/filter_pheno_900.sh" \
     --befile "$no_na_befile" \
     --out-bod "$afc_900_befile"
+
+"$SH_UTILS_DIR/fix_opi.sh" \
+    --opi "$afc_900_befile.opi" 
