@@ -117,7 +117,8 @@ else
     intermediate_dir="$INTERMEDIATE_DIR/${log_prefix}cut_$trm_cutoff"
     results_dir="$RESULTS_DIR/${log_prefix}cut_${trm_cutoff}"
 fi
-
+rm -rf "$intermediate_dir"
+rm -rf "$results_dir"
 covars_dir="$intermediate_dir/covars"
 
 mkdir -p "$covars_dir"
