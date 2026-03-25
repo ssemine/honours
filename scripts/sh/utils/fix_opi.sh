@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Fixes OSCA's bug that assigns chr 23 and 24 X and Y value
+# Fixes OSCA's bug that assigns chr 23 and 24 X and Y values
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
