@@ -208,16 +208,21 @@ echo -e "\nRunning std_bod.sh ...\n"
 echo -e "\nFinish std_bod.sh\n"
 
 # WORKS. #    --orm-cutoff "$trm_cutoff" add if does not work
-osca \
-    --befile "$std_bod" \
+--befile "$std_bod" \
     --make-orm \
     --out "$intermediate_dir/trm_900_${trm_cutoff}_tmp"
-
-osca \
-	--orm "$intermediate_dir/trm_900_${trm_cutoff}_tmp" \
-    --orm-cutoff "$trm_cutoff" \
-	--make-orm \
-	--out "$intermediate_dir/trm_900_${trm_cutoff}"
+if [ "$trm_cutoff" = "nocut" ]; then
+    osca \
+        --orm "$intermediate_dir/trm_900_${trm_cutoff}_tmp" \
+        --make-orm \
+        --out "$intermediate_dir/trm_900_${trm_cutoff}"
+else
+    osca \
+        --orm "$intermediate_dir/trm_900_${trm_cutoff}_tmp" \
+        --orm-cutoff "$trm_cutoff" \
+        --make-orm \
+        --out "$intermediate_dir/trm_900_${trm_cutoff}"
+fi
 
 cp "$intermediate_dir/trm_900_${trm_cutoff}.orm.id" "$intermediate_dir/trm_900_${trm_cutoff}.list"
 osca \
@@ -263,7 +268,7 @@ if [ "${#covars[@]}" -gt 0 ]; then
         
         covar_keep_iids="$intermediate_dir/covar_keep.list"
         gawk '{ print $1, $2 }' "$covar_tmp" > "$covar_keep_iids"
-        
+
         if [ ! -s "$used_covar_file" ]; then
             cp "$covar_tmp" "$used_covar_file"
         else
@@ -292,11 +297,19 @@ fi
 # Final TRM
 "$SH_UTILS_DIR/fix_opi.sh" \
     --opi "$final_befile.opi"
-osca \
-	--befile "$final_befile" \
-	--make-orm \
-	--orm-cutoff "$trm_cutoff" \
-	--out "$results_dir/trm"
+
+if [ "$trm_cutoff" = "nocut" ]; then
+    osca \
+        --befile "$final_befile" \
+        --make-orm \
+        --out "$results_dir/trm"
+else
+    osca \
+        --befile "$final_befile" \
+        --make-orm \
+        --orm-cutoff "$trm_cutoff" \
+        --out "$results_dir/trm"
+fi
 
 "$SH_UTILS_DIR/get_oreml_pheno.sh" \
     --oii "$final_befile.oii" \
