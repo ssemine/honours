@@ -5,8 +5,8 @@ library(dplyr)
 setwd("/home/s4693165/honours/scripts/R")
 source("tblup/utils/read_orm.R")
 
-input_file <- "/scratch/user/s4693165/results/initial/efile"
-orm_obj <- ReadORMBin("/scratch/user/s4693165/results/initial/trm")
+input_file <- "/scratch/user/s4693165/results/cut_nocut_3_pca2/efile"
+orm_obj <- ReadORMBin("/scratch/user/s4693165/results/cut_nocut_3_pca2/trm")
 n <- nrow(orm_obj$id)
 ORM_mat <- matrix(0, n, n)
 diag(ORM_mat) <- orm_obj$diag
