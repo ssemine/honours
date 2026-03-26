@@ -5,8 +5,8 @@ library(dplyr)
 setwd("/home/s4693165/honours/scripts/R")
 source("tblup/utils/read_orm.R")
 
-input_file <- "/scratch/user/s4693165/results/cut_nocut_3_pca2/efile"
-orm_obj <- ReadORMBin("/scratch/user/s4693165/results/cut_nocut_3_pca2/trm")
+input_file <- "/scratch/user/s4693165/results/initial/efile"
+orm_obj <- ReadORMBin("/scratch/user/s4693165/results/initial/trm")
 n <- nrow(orm_obj$id)
 ORM_mat <- matrix(0, n, n)
 diag(ORM_mat) <- orm_obj$diag
@@ -43,10 +43,10 @@ labels_df <- scores2 %>%
 
 p <- ggplot(scores2, aes(x = PC1, y = PC2, color = orm_mean)) +
   geom_point(size = 2, alpha = 0.5) +
-  scale_color_viridis_c() +
+  scale_color_viridis_c( name = "mean TRM") +
   xlab(paste0("PC1 (", round(summary(pca_res)$importance[2,1]*100, 1), "%)")) +
   ylab(paste0("PC2 (", round(summary(pca_res)$importance[2,2]*100, 1), "%)")) +
-  ggtitle("PCA of Final Gene Expression Matrix (colored by mean ORM)") +
+  ggtitle("PCA of finalised Gene expression") +
   geom_text_repel(
     data = labels_df,
     aes(label = iid),
@@ -59,6 +59,5 @@ p <- ggplot(scores2, aes(x = PC1, y = PC2, color = orm_mean)) +
     max.overlaps = Inf
   ) +
   theme_bw()
-
 print(p)
 
