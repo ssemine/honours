@@ -45,10 +45,10 @@ done
 
 if [ "$qc" = true ]; then
     osca --befile "$befile" --sd-min "$sd_min" --make-bod --out "$befile.sdmin"
-    "$SH_UTILS_DIR/fix_opi.sh" \
+    "$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
         --opi "$befile.sdmin.opi" 
     osca --befile "$befile.sdmin" --missing-ratio-probe "$missing_ratio_probe" --make-bod --out "$befile.mrp"
-    "$SH_UTILS_DIR/fix_opi.sh" \
+    "$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
         --opi "$befile.mrp.opi" 
     new_befile="$befile.mrp"
     befile="$new_befile"

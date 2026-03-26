@@ -24,7 +24,7 @@ sbatch \
   --output="$LOGS_TBLUP_DIR/%x_%j.out" \
   --error="$LOGS_TBLUP_DIR/%x_%j.err" \
   --job-name="bod_assembly" \
-  --wrap="/home/s4693165/honours/scripts/sh/pipeline/filter.sh \
+  --wrap="/home/s4693165/honours/scripts/sh/pipeline/tblup/filter_tblup.sh \
 --initial-befile $initial_befile \
 --auto-gene-list $auto_gene_list \
 --auto-befile $auto_befile \

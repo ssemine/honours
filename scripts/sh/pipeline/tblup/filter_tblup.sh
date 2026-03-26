@@ -68,7 +68,7 @@ done
 
 # Filters BOD and phenotype files by excluding non-shared individuals 
 echo "Running filter_bod_pheno.sh ..."
-"$SH_UTILS_DIR/filter_bod_pheno.sh" \
+"$SH_TBLUP_UTILS_DIR/filter_bod_pheno.sh" \
     --pheno-map "$pheno_map" \
     --pheno-file "$pheno_file" \
     --befile "$auto_befile" \
@@ -77,11 +77,11 @@ echo "Running filter_bod_pheno.sh ..."
     --out-bod "$shared_befile" \
     --out-pheno "$shared_pheno"
 
-"$SH_UTILS_DIR/fix_opi.sh" \
+"$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
     --opi "$shared_befile.opi" 
 
 # Filters BOD and phenotype files for NA values, specifically AFC
-"$SH_UTILS_DIR/barcode_to_iid.sh" \
+"$SH_TBLUP_UTILS_DIR/barcode_to_iid.sh" \
     --pheno-file "$shared_pheno" \
     --pheno-map "$pheno_map" \
     --out "$iid_pheno"
@@ -105,17 +105,17 @@ gawk '
 mv "$iid_pheno.tmp" "$iid_pheno"
 
 # Checks for NA values
-"$SH_UTILS_DIR/filter_iid_na.sh" \
+"$SH_TBLUP_UTILS_DIR/filter_iid_na.sh" \
     --befile "$shared_befile" \
     --out-bod "$no_na_befile"
 
-"$SH_UTILS_DIR/fix_opi.sh" \
+"$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
     --opi "$no_na_befile.opi" 
 
 # Filters for AFC < 900
-"$SH_UTILS_DIR/filter_pheno_900.sh" \
+"$SH_TBLUP_UTILS_DIR/filter_pheno_900.sh" \
     --befile "$no_na_befile" \
     --out-bod "$afc_900_befile"
 
-"$SH_UTILS_DIR/fix_opi.sh" \
+"$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
     --opi "$afc_900_befile.opi" 

@@ -3,7 +3,7 @@
 source /home/s4693165/honours/config/paths.conf
 source "$OSCA_CONF"
 source "$R_CONF"
-source "$SH_UTILS_DIR/helper_functions.sh"
+source "$SH_TBLUP_UTILS_DIR/helper_functions.sh"
 source "$PHENO_CONF"
 
 module load "$OSCA_MODULE"
@@ -163,7 +163,7 @@ if [[ "$pc1" = true ]]; then
         --remove "$intermediate_dir/pca1_excl_iids.list" \
         --make-bod \
         --out "$initial_befile.tmp"
-    "$SH_UTILS_DIR/fix_opi.sh" \
+    "$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
         --opi "$initial_befile.tmp.opi"
     
     echo -e "\n$initial_befile <- $initial_befile.tmp"
@@ -201,10 +201,10 @@ fi
 echo -e "\nFinish bod_qc.sh\n"
 
 echo -e "\nRunning std_bod.sh ...\n"
-"$SH_UTILS_DIR/std_bod.sh" \
+"$SH_TBLUP_UTILS_DIR/std_bod.sh" \
     --befile "$qc_bod" \
     --out-bod "$std_bod"
-"$SH_UTILS_DIR/fix_opi.sh" \
+"$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
     --opi "$std_bod.opi"
 echo -e "\nFinish std_bod.sh\n"
 
@@ -232,7 +232,7 @@ osca \
     --keep "$intermediate_dir/trm_900_${trm_cutoff}.list" \
     --make-bod \
     --out "$final_befile_tmp"
-"$SH_UTILS_DIR/fix_opi.sh" \
+"$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
     --opi "$final_befile_tmp.opi"
 rm "$intermediate_dir/trm_900_${trm_cutoff}.list"
 
@@ -261,7 +261,7 @@ if [ "${#covars[@]}" -gt 0 ]; then
             echo -e "\nError: no match in covar indices\n"
             exit 1
         fi
-        "$SH_UTILS_DIR/get_covar.sh" \
+        "$SH_TBLUP_UTILS_DIR/get_covar.sh" \
             --pheno-file "$initial_pheno" \
             --iid-idx 1 \
             --covar-idx "$covar_idx" \
@@ -287,7 +287,7 @@ if [ "${#covars[@]}" -gt 0 ]; then
             --make-bod \
             --out "$final_befile_tmp"
 
-        "$SH_UTILS_DIR/fix_opi.sh" \
+        "$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
             --opi "$final_befile_tmp.opi"
 
         cp "$final_befile_tmp.bod" "$final_befile.bod"
@@ -297,7 +297,7 @@ if [ "${#covars[@]}" -gt 0 ]; then
 fi
 
 # Final TRM
-"$SH_UTILS_DIR/fix_opi.sh" \
+"$SH_TBLUP_UTILS_DIR/fix_opi.sh" \
     --opi "$final_befile.opi"
 
 if [ "$trm_cutoff" = "nocut" ]; then
@@ -313,13 +313,13 @@ else
         --out "$results_dir/trm"
 fi
 
-"$SH_UTILS_DIR/get_oreml_pheno.sh" \
+"$SH_TBLUP_UTILS_DIR/get_oreml_pheno.sh" \
     --oii "$final_befile.oii" \
     --pheno-iid "$initial_pheno" \
     --out-pheno "$oreml_pheno_data"
 
 if [ -n "$n_pca" ]; then
-    "$SH_UTILS_DIR/get_pca.sh" \
+    "$SH_TBLUP_UTILS_DIR/get_pca.sh" \
         --trm "$results_dir/trm" \
         --out-pca "$pca_data" \
         --n-pca "$n_pca"
@@ -342,26 +342,26 @@ if [ -n "$n_pca" ]; then
 fi
 
 if [ -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
-    "$SH_UTILS_DIR/run_oreml.sh" \
+    "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
     --trm "$results_dir/trm" \
     --covar-file "$covar_file" \
     --pheno "$oreml_pheno_data" \
     --out "$results_dir/sol"
 elif [ ! -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
-    "$SH_UTILS_DIR/run_oreml.sh" \
+    "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
     --trm "$results_dir/trm" \
     --qcovar-file "$qcovar_file" \
     --pheno "$oreml_pheno_data" \
     --out "$results_dir/sol"
 elif [ -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
-    "$SH_UTILS_DIR/run_oreml.sh" \
+    "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
     --trm "$results_dir/trm" \
     --covar-file "$covar_file" \
     --qcovar-file "$qcovar_file" \
     --pheno "$oreml_pheno_data" \
     --out "$results_dir/sol"
 elif [ ! -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
-    "$SH_UTILS_DIR/run_oreml.sh" \
+    "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
     --trm "$results_dir/trm" \
     --out "$results_dir/sol" \
     --pheno "$oreml_pheno_data"
