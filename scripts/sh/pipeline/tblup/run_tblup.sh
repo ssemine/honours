@@ -75,7 +75,7 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
-:
+
 if [ "$use_covar" = true ]; then
     source "$covar_idx_file" # sources covars variable, ignored by git
     if [ ! -s "$covar_idx_file" ]; then
@@ -110,12 +110,15 @@ elif [ -n "$pca_prefix" ]; then
     dir_suffix="$pca_prefix"
 fi
 
+# Added tblup suffix, so tblup and gblup results could go into separate directories
+tblup_suffix="tblup"
+
 if [ -n "$dir_suffix" ]; then
-    intermediate_dir="$INTERMEDIATE_DIR/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
-    results_dir="$RESULTS_DIR/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
+    intermediate_dir="$INTERMEDIATE_DIR//$tblup_suffix/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
+    results_dir="$RESULTS_DIR//$tblup_suffix/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
 else
-    intermediate_dir="$INTERMEDIATE_DIR/${log_prefix}cut_$trm_cutoff"
-    results_dir="$RESULTS_DIR/${log_prefix}cut_${trm_cutoff}"
+    intermediate_dir="$INTERMEDIATE_DIR//$tblup_suffix/${log_prefix}cut_$trm_cutoff"
+    results_dir="$RESULTS_DIR//$tblup_suffix/${log_prefix}cut_${trm_cutoff}"
 fi
 rm -rf "$intermediate_dir"
 rm -rf "$results_dir"
@@ -172,7 +175,7 @@ fi
 
 echo -e "\nRunning bod_qc.sh ...\n"
 if [ "$qc" = true ] && [ "$log2_transform" = true ]; then
-    "$SH_PIPE_DIR/bod_qc.sh" \
+    "$SH_TBLUP_PIPE_DIR/bod_qc.sh" \
         --befile "$initial_befile" \
         --qc \
         --log2-transform \
@@ -180,21 +183,21 @@ if [ "$qc" = true ] && [ "$log2_transform" = true ]; then
         --missing-ratio-probe "$missing_ratio_probe" \
         --out-bod "$qc_bod"
 elif [ "$qc" = true ]; then
-    "$SH_PIPE_DIR/bod_qc.sh" \
+    "$SH_TBLUP_PIPE_DIR/bod_qc.sh" \
         --befile "$initial_befile" \
         --qc \
         --sd-min "$sd_min" \
         --missing-ratio-probe "$missing_ratio_probe" \
         --out-bod "$qc_bod"
 elif [ "$log2_transform" = true ]; then
-    "$SH_PIPE_DIR/bod_qc.sh" \
+    "$SH_TBLUP_PIPE_DIR/bod_qc.sh" \
         --befile "$initial_befile" \
         --log2-transform \
         --sd-min "$sd_min" \
         --missing-ratio-probe "$missing_ratio_probe" \
         --out-bod "$qc_bod"
 else
-    "$SH_PIPE_DIR/bod_qc.sh" \
+    "$SH_TBLUP_PIPE_DIR/bod_qc.sh" \
         --befile "$initial_befile" \
         --out-bod "$qc_bod"
 fi
@@ -237,7 +240,7 @@ osca \
 rm "$intermediate_dir/trm_900_${trm_cutoff}.list"
 
 if [[ "$iqr" = true ]]; then
-    "$SH_PIPE_DIR/filter_trm_outliers.sh" \
+    "$SH_TBLUP_PIPE_DIR/filter_trm_outliers.sh" \
         --befile "$final_befile_tmp" \
         --trm "$intermediate_dir/trm_900_${trm_cutoff}" \
         --out-bod "$final_befile" \
