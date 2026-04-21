@@ -3,7 +3,6 @@
 source /home/s4693165/honours/config/paths.conf
 source "$SLURM_CONF"
 
-# fix vars here, test filter, ensure chromosomes are correct, double check if --autosome needs to be added to gcta64, test run_gblup, visualise.
 initial_bfile="$GENOMIC_DATA"
 auto_bfile="$GENOMIC_DATA"
 
