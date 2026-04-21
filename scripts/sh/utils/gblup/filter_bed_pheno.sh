@@ -52,6 +52,7 @@ gawk \
 
 gcta64 \
 	--bfile "$bfile" \
+    --autosome-num 29 \
 	--remove "$excl_iids" \
 	--make-bed \
 	--out "$out_bed"

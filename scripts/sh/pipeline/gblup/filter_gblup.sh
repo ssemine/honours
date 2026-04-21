@@ -75,7 +75,7 @@ echo "Running filter_bod_pheno.sh ..."
     --bfile "$auto_bfile" \
     --excl-iids "$excl_iids_not_shared" \
     --fam "$auto_bfile.fam" \
-    --out-bed "$shared_befile" \
+    --out-bed "$shared_bfile" \
     --out-pheno "$shared_pheno"
 
 # Filters BOD and phenotype files for NA values, specifically AFC
