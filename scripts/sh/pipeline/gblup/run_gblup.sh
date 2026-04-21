@@ -18,6 +18,17 @@ source "$GCTA_CONF"
 module load "$PLINK_MODULE"
 module load "$GCTA_MODULE"
 
+initial_bfile="$GENE_EXP_FILTER_BOD_900_PHENO_DATA" # change
+bfile="$intitial_bfile"
+initial_pheno="$PHENO_IID_DATA"
+categorical_covar_indices=($CG_IDX $MATE_IN_DATE_IDX $CALF_SEX_IDX $YEAR_MATE_IDX $HEF_PREG_SUCCESS_IDX $HEF_WKS_PREG_BIN_IDX)
+quantitative_covar_indices=($HEIFER_AGE_JOINING_IDX $HEF_WKS_PREG_IDX)
+indi_missingness=0.1
+hetzyg="heterozygosity"
+maf_thresh=0.01
+snp_missingness=0.05
+hwe_thresh=1e-6 # check if works in PLINK
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --bfile)
@@ -80,11 +91,6 @@ if [ -n "$n_pca" ]; then
 else
     pca_prefix=""
 fi
-if [ "$log2_transform" = true ]; then
-    log_prefix="log_"
-else
-    log_prefix=""
-fi
 dir_suffix=""
 if [ -n "$covar_prefix" ] && [ -n "$pca_prefix" ]; then
     dir_suffix="${covar_prefix}_${pca_prefix}"
@@ -95,22 +101,26 @@ elif [ -n "$pca_prefix" ]; then
 fi
 gblup_suffix="gblup"
 if [ -n "$dir_suffix" ]; then
-    intermediate_dir="$INTERMEDIATE_DIR/$gblup_suffix/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
-    results_dir="$RESULTS_DIR/$gblup_suffix/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
+    intermediate_dir="$INTERMEDIATE_DIR/$gblup_suffix/cut_${grm_cutoff}_$dir_suffix"
+    results_dir="$RESULTS_DIR/$gblup_suffix/cut_${grm_cutoff}_$dir_suffix"
 else
-    intermediate_dir="$INTERMEDIATE_DIR/$gblup_suffix/${log_prefix}cut_$trm_cutoff"
-    results_dir="$RESULTS_DIR/$gblup_suffix/${log_prefix}cut_${trm_cutoff}"
+    intermediate_dir="$INTERMEDIATE_DIR/$gblup_suffix/cut_${grm_cutoff}"
+    results_dir="$RESULTS_DIR/$gblup_suffix/cut_${grm_cutoff}"
 fi
+rm -rf "$intermediate_dir"
+rm -rf "$results_dir"
+covars_dir="$intermediate_dir/covars"
+mkdir -p "$covars_dir"
+mkdir -p "$intermediate_dir"
+mkdir -p "$results_dir"
 
 # QC Variables
-indi_missingness=0.1
-hetzyg="heterozygosity"
-maf_thresh=0.01
-snp_missingness=0.05
-hwe_thresh=1e-6 # check if works in PLINK
 greml_pheno_data="$results_dir/greml_pheno_data_${grm_cutoff}.phen"
-
-bfile="$intitial_bfile"
+pca_data="$intermediate_dir/pca_${grm_cutoff}"
+final_bfile="$results_dir/final_bfile"
+final_bfile_tmp="$intermediate_dir/final_bfile_tmp"
+qcovar_file="$results_dir/qcovar.qcovar"
+covar_file="$results_dir/covar.covar"
 
 # PLINK QC
 plink --bfile "$bfile" --mind "$indi_missingness" --make-bed --out "$bfile.step1"
@@ -157,8 +167,9 @@ bfile="$bfile.step6"
     #plink --bfile "$bfile.step"
 #fi
 
+# GRM Assembly
 gcta64 --bfile "$bfile" --autosome --make-grm --out "$grm"
-if [ "$trm_cutoff" = "nocut" ]; then
+if [ "$grm_cutoff" = "nocut" ]; then
     gcta64 \
         --bfile "$bfile" \
         --make-grm \
@@ -170,7 +181,7 @@ else
         --out "$results_dir/grm_uncut"
     gcta64 \
         --grm "$results_dir/grm_uncut" \
-        --grm-cutoff "$trm_cutoff" \
+        --grm-cutoff "$grm_cutoff" \
         --out "$results_dir/grm"
 fi
 
