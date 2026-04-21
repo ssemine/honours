@@ -111,4 +111,4 @@ mv "$iid_pheno.tmp" "$iid_pheno" &&
 "$SH_GBLUP_UTILS_DIR/filter_pheno_900.sh" \
     --bfile "$no_na_bfile" \
     --out-bed "$afc_900_bfile" \
-    --excl-iids "$excl_iids3" &&
+    --excl-iids "$excl_iids3"
