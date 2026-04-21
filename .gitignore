@@ -13,3 +13,4 @@ scripts/R/.Rhistory
 
 # sh scripts
 scripts/sh/setex.sh
+get_plots.sh

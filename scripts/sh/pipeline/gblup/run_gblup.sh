@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # match iids with phenotype of interest
 
 # run qc:
@@ -7,8 +9,6 @@
 # prepare GRM
 # prepare covariates
 # run GREML
-
-#!/bin/bash
 
 source /home/s4693165/honours/config/paths.conf
 
@@ -49,6 +49,14 @@ while [[ $# -gt 0 ]]; do
             covar_idx_file="$2"
             shift 2
             ;;
+        --pca)
+            use_pca=true
+            shift 1
+            ;;
+        --hetzyg)
+            use_hetzyg=true
+            shift 1
+            ;;
         *)
             echo "Unknown argument: $1"
             exit 1
@@ -56,50 +64,169 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# PLINK QC
-plink --bfile "$bfile" --mind 0.1 --make-bed --out "$bfile"
-plink --bfile "$bfile" --check-sex --out "$bfile"
-plink --bfile "$bfile" --het --out heterozygosity # filter out with awk
-plink --bfile "$bfile" --maf 0.01 --make-bed --out "$bfile"
-plink --bfile "$bfile" --geno 0.05 --make-bed --out "$bfile"
-plink --bfile "$bfile" --hwe 1e-6 --make-bed --out "$bfile"
-
-
-# Assumes filtered for pheno BFILE
-gcta64 --bfile "$bfile" --autosome --make-grm --out "$grm"
-
-if [ -n "$grm_cutoff" ]; then   
-    gcta64 --grm "$grm" --grm-cutoff "$grm_cutoff" --make-grm --out "$grm.tmp"
+if [ "$use_covar" = true ]; then
+    source "$covar_idx_file" # sources covars variable, ignored by git
+    if [ ! -s "$covar_idx_file" ]; then
+        echo -e "\nCovar file does not exist or empty\n"
+    fi
+fi
+if [ "${#covars[@]}" -gt 0 ]; then
+    covar_prefix=$(IFS=_ ; echo "${covars[*]}")
+else
+    covar_prefix=""
+fi
+if [ -n "$n_pca" ]; then
+    pca_prefix="pca${n_pca}"
+else
+    pca_prefix=""
+fi
+if [ "$log2_transform" = true ]; then
+    log_prefix="log_"
+else
+    log_prefix=""
+fi
+dir_suffix=""
+if [ -n "$covar_prefix" ] && [ -n "$pca_prefix" ]; then
+    dir_suffix="${covar_prefix}_${pca_prefix}"
+elif [ -n "$covar_prefix" ]; then
+    dir_suffix="$covar_prefix"
+elif [ -n "$pca_prefix" ]; then
+    dir_suffix="$pca_prefix"
+fi
+gblup_suffix="gblup"
+if [ -n "$dir_suffix" ]; then
+    intermediate_dir="$INTERMEDIATE_DIR/$gblup_suffix/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
+    results_dir="$RESULTS_DIR/$gblup_suffix/${log_prefix}cut_${trm_cutoff}_$dir_suffix"
+else
+    intermediate_dir="$INTERMEDIATE_DIR/$gblup_suffix/${log_prefix}cut_$trm_cutoff"
+    results_dir="$RESULTS_DIR/$gblup_suffix/${log_prefix}cut_${trm_cutoff}"
 fi
 
+# QC Variables
+indi_missingness=0.1
+hetzyg="heterozygosity"
+maf_thresh=0.01
+snp_missingness=0.05
+hwe_thresh=1e-6 # check if works in PLINK
+greml_pheno_data="$results_dir/greml_pheno_data_${grm_cutoff}.phen"
 
+bfile="$intitial_bfile"
 
+# PLINK QC
+plink --bfile "$bfile" --mind "$indi_missingness" --make-bed --out "$bfile.step1"
+plink --bfile "$bfile.step1" --check-sex --out "$bfile.step2"
 
+if [ "$use_hetzyg" = true ]; then
+    plink --bfile "$bfile.step2" --het --out "$hetzyg" # filter out with awk
 
+    gawk '
+    NR > 1 {
+        f[NR] = $6
+        id[NR] = $1 " " $2
+        sum += $6
+        sumsq += ($6)^2
+    }
+    END {
+        n = NR - 1
+        mean = sum / n
+        sd = sqrt((sumsq / n) - (mean^2))
+
+        lower = mean - 3*sd
+        upper = mean + 3*sd
+
+        for (i = 2; i <= NR; i++) {
+            if (f[i] < lower || f[i] > upper) {
+                print id[i]
+            }
+        }
+    }' "$hetzyg" > "$hetzyg.out"
+    plink --bfile "$bfile.step2" --remove "$hetzyg.out" --make-bed --out "$bfile.step3"
+else
+    cp "$bfile.step2.bed" "$bfile.step3.bed"
+    cp "$bfile.step2.bim" "$bfile.step3.bim"
+    cp "$bfile.step2.fam" "$bfile.step3.fam"
+fi
+
+plink --bfile "$bfile.step3" --maf "$maf_thresh" --make-bed --out "$bfile.step4"
+plink --bfile "$bfile.step4" --geno "$snp_missingness" --make-bed --out "$bfile.step5"
+plink --bfile "$bfile.step5" --hwe "$hwe_thresh" --make-bed --out "$bfile.step6"
+
+bfile="$bfile.step6"
+# run PCA on $bfile.step6
+#if [ "$use_pca" = true ]; then
+    #plink --bfile "$bfile.step"
+#fi
+
+gcta64 --bfile "$bfile" --autosome --make-grm --out "$grm"
+if [ "$trm_cutoff" = "nocut" ]; then
+    gcta64 \
+        --bfile "$bfile" \
+        --make-grm \
+        --out "$results_dir/grm"
+else
+    gcta64 \
+        --bfile "$bfile" \
+        --make-grm \
+        --out "$results_dir/grm_uncut"
+    gcta64 \
+        --grm "$results_dir/grm_uncut" \
+        --grm-cutoff "$trm_cutoff" \
+        --out "$results_dir/grm"
+fi
+
+# change to gcta or generalise 
+"$SH_TBLUP_UTILS_DIR/get_oreml_pheno.sh" \
+    --oii "$bfile.fam" \
+    --pheno-iid "$initial_pheno" \
+    --out-pheno "$greml_pheno_data"
+
+# Add covariate ADAPT TO GCTA
+if [ -n "$n_pca" ]; then
+    "$SH_TBLUP_UTILS_DIR/get_pca.sh" \
+        --trm "$results_dir/grm" \
+        --out-pca "$pca_data" \
+        --n-pca "$n_pca"
+    if [ ! -s "$qcovar_file" ]; then
+        cp "$pca_data.eigenvec" "$qcovar_file"
+    else
+        gawk '
+            FNR==NR {pca[$1]=$0; next} 
+            $1 in pca {
+                split($0,a," ") 
+                split(pca[$1],b," ") 
+                out=a[1]                
+                for(i=2;i<=length(a);i++) out=out" "a[i];
+                for(i=3;i<=length(b);i++) out=out" "b[i];
+                print out
+            }
+        ' "$pca_data.eigenvec" "$qcovar_file" > "$qcovar_file.tmp"
+        mv "$qcovar_file.tmp" "$qcovar_file"
+    fi
+fi
 
 # final
 if [ -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
-    "$SH_GBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/grm" \
-    --covar-file "$covar_file" \
-    --pheno "$greml_pheno_data" \
-    --out "$results_dir/sol"
+    "$SH_GBLUP_UTILS_DIR/run_greml.sh" \
+        --grm "$results_dir/grm" \
+        --covar-file "$covar_file" \
+        --pheno "$greml_pheno_data" \
+        --out "$results_dir/sol"
 elif [ ! -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
-    "$SH_GBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/grm" \
-    --qcovar-file "$qcovar_file" \
-    --pheno "$greml_pheno_data" \
-    --out "$results_dir/sol"
+    "$SH_GBLUP_UTILS_DIR/run_greml.sh" \
+        --grm "$results_dir/grm" \
+        --qcovar-file "$qcovar_file" \
+        --pheno "$greml_pheno_data" \
+        --out "$results_dir/sol"
 elif [ -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
-    "$SH_GBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/grm" \
-    --covar-file "$covar_file" \
-    --qcovar-file "$qcovar_file" \
-    --pheno "$greml_pheno_data" \
-    --out "$results_dir/sol"
+    "$SH_GBLUP_UTILS_DIR/run_greml.sh" \
+        --grm "$results_dir/grm" \
+        --covar-file "$covar_file" \
+        --qcovar-file "$qcovar_file" \
+        --pheno "$greml_pheno_data" \
+        --out "$results_dir/sol"
 elif [ ! -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
-    "$SH_GBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/grm" \
-    --out "$results_dir/sol" \
-    --pheno "$greml_pheno_data"
+    "$SH_GBLUP_UTILS_DIR/run_greml.sh" \
+        --grm "$results_dir/grm" \
+        --out "$results_dir/sol" \
+        --pheno "$greml_pheno_data"
 fi

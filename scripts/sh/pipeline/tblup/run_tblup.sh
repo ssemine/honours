@@ -322,8 +322,8 @@ fi
     --out-pheno "$oreml_pheno_data"
 
 if [ -n "$n_pca" ]; then
-    "$SH_TBLUP_UTILS_DIR/get_pca.sh" \
-        --trm "$results_dir/trm" \
+    "$SH_GBLUP_UTILS_DIR/get_pca.sh" \
+        --grm "$results_dir/grm" \
         --out-pca "$pca_data" \
         --n-pca "$n_pca"
     if [ ! -s "$qcovar_file" ]; then
@@ -346,26 +346,26 @@ fi
 
 if [ -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
     "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/trm" \
-    --covar-file "$covar_file" \
-    --pheno "$oreml_pheno_data" \
-    --out "$results_dir/sol"
+        --trm "$results_dir/trm" \
+        --covar-file "$covar_file" \
+        --pheno "$oreml_pheno_data" \
+        --out "$results_dir/sol"
 elif [ ! -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
     "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/trm" \
-    --qcovar-file "$qcovar_file" \
-    --pheno "$oreml_pheno_data" \
-    --out "$results_dir/sol"
+        --trm "$results_dir/trm" \
+        --qcovar-file "$qcovar_file" \
+        --pheno "$oreml_pheno_data" \
+        --out "$results_dir/sol"
 elif [ -s "$covar_file" ] && [ -s "$qcovar_file" ]; then
     "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/trm" \
-    --covar-file "$covar_file" \
-    --qcovar-file "$qcovar_file" \
-    --pheno "$oreml_pheno_data" \
-    --out "$results_dir/sol"
+        --trm "$results_dir/trm" \
+        --covar-file "$covar_file" \
+        --qcovar-file "$qcovar_file" \
+        --pheno "$oreml_pheno_data" \
+        --out "$results_dir/sol"
 elif [ ! -s "$covar_file" ] && [ ! -s "$qcovar_file" ]; then
     "$SH_TBLUP_UTILS_DIR/run_oreml.sh" \
-    --trm "$results_dir/trm" \
-    --out "$results_dir/sol" \
-    --pheno "$oreml_pheno_data"
+        --trm "$results_dir/trm" \
+        --out "$results_dir/sol" \
+        --pheno "$oreml_pheno_data"
 fi
