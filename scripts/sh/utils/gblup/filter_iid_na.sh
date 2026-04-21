@@ -6,7 +6,6 @@ source "$GCTA_CONF"
 
 module load "$GCTA_MODULE"
 
-excl_iids="$EXCL_IIDS_NA"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in

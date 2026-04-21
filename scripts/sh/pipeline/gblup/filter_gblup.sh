@@ -76,13 +76,13 @@ echo "Running filter_bod_pheno.sh ..."
     --excl-iids "$excl_iids_not_shared" \
     --fam "$auto_bfile.fam" \
     --out-bed "$shared_bfile" \
-    --out-pheno "$shared_pheno"
+    --out-pheno "$shared_pheno" &&
 
 # Filters BOD and phenotype files for NA values, specifically AFC
 "$SH_TBLUP_UTILS_DIR/barcode_to_iid.sh" \
     --pheno-file "$shared_pheno" \
     --pheno-map "$pheno_map" \
-    --out "$iid_pheno"
+    --out "$iid_pheno" &&
 
 # adds columns add for stages
 gawk '
@@ -99,16 +99,16 @@ gawk '
         }
         print $0, bin
     }
-' "$iid_pheno" > "$iid_pheno.tmp"
-mv "$iid_pheno.tmp" "$iid_pheno"
+' "$iid_pheno" > "$iid_pheno.tmp" &&
+mv "$iid_pheno.tmp" "$iid_pheno" &&
 
 "$SH_GBLUP_UTILS_DIR/filter_iid_na.sh" \
     --bfile "$shared_bfile" \
     --out-bed "$no_na_bfile" \
-    --excl-iids "$excl_iids2"
+    --excl-iids "$excl_iids2" &&
 
 # Filters for AFC < 900
 "$SH_GBLUP_UTILS_DIR/filter_pheno_900.sh" \
     --bfile "$no_na_bfile" \
     --out-bed "$afc_900_bfile" \
-    --excl-iids "$excl_iids3"
+    --excl-iids "$excl_iids3" &&
