@@ -3,9 +3,10 @@
 
 source /home/s4693165/honours/config/paths.conf
 source "$PHENO_CONF"
-source "$GCTA_CONF"
-
-module load "$GCTA_MODULE"
+#source "$GCTA_CONF"
+source "$PLINK_CONF"
+#module load "$GCTA_MODULE"
+module load "$PLINK_MODULE"
 
 excl_iids="$EXCL_IIDS_900"
 
@@ -31,11 +32,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 # FIX MY ARG INDEX
-gawk 'NR>1 && $8 < 900 {print $1, $1}' "$PHENO_IID_DATA" > "$excl_iids"
+gawk 'NR>1 && $8 < 900 {print $1, $1}' "$PHENO_IID_DATA" > "$excl_iids" &&
 
-gcta64 \
+plink \
 	--bfile "$bfile" \
 	--remove "$excl_iids" \
-	--autosome-num 29 \
+	--chr-set 29 \
 	--make-bed \
 	--out "$out_bed"

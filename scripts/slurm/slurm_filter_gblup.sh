@@ -2,7 +2,6 @@
 
 source /home/s4693165/honours/config/paths.conf
 source "$SLURM_CONF"
-
 initial_bfile="$GENOMIC_DATA"
 auto_bfile="$GENOMIC_DATA"
 
@@ -22,8 +21,8 @@ mkdir -p "$GENOMIC_PREPROCESSED_DIR"
 sbatch \
   --account="$ACCOUNT_STRING" \
   --partition="$PARTITION" \
-  --cpus-per-task="$CPUS" \
-  --mem="$MEM_MAKE_TRM" \
+  --cpus-per-task="2" \
+  --mem="128G" \
   --time="$TIME" \
   --output="$LOGS_GBLUP_DIR/%x_%j.out" \
   --error="$LOGS_GBLUP_DIR/%x_%j.err" \

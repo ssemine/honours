@@ -1,9 +1,10 @@
 #!/bin/bash
 
 source /home/s4693165/honours/config/paths.conf
-source "$GCTA_CONF"
-
-module load "$GCTA_MODULE"
+#source "$GCTA_CONF"
+source "$PLINK_CONF"
+#module load "$GCTA_MODULE"
+module "$PLINK_MODULE"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -48,11 +49,11 @@ gawk \
 	-f "$AWK_SCRIPTS_DIR/filter_bod_pheno.awk" \
 	"$fam" \
 	"$pheno_map" \
-	"$pheno_file"
+	"$pheno_file" &&
 
-gcta64 \
+plink \
 	--bfile "$bfile" \
-    --autosome-num 29 \
+	--chr-set 29 \
 	--remove "$excl_iids" \
 	--make-bed \
 	--out "$out_bed"
