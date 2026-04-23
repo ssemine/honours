@@ -188,18 +188,22 @@ if [ "$grm_cutoff" = "nocut" ]; then
         --bfile "$bfile" \
         --make-grm \
         --out "$results_dir/grm" \
-        --autosome-num 29
+        --autosome-num 29 \
+        --autosome
 else
     gcta64 \
         --bfile "$bfile" \
         --make-grm \
         --out "$results_dir/grm_uncut" \
-        --autosome-num 29
+        --autosome-num 29 \
+        --autosome
     gcta64 \
         --grm "$results_dir/grm_uncut" \
         --grm-cutoff "$grm_cutoff" \
+        --make-grm \
         --out "$results_dir/grm" \
-        --autosome-num 29
+        --autosome-num 29 \
+        --autosome
 fi
 
 # change to gcta or generalise 
@@ -210,8 +214,8 @@ fi
 
 # Add covariate ADAPT TO GCTA
 if [ -n "$n_pca" ]; then
-    "$SH_TBLUP_UTILS_DIR/get_pca.sh" \
-        --trm "$results_dir/grm" \
+    "$SH_GBLUP_UTILS_DIR/get_pca.sh" \
+        --grm "$results_dir/grm" \
         --out-pca "$pca_data" \
         --n-pca "$n_pca"
     if [ ! -s "$qcovar_file" ]; then

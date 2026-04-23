@@ -40,4 +40,6 @@ done
 gcta64 \
     --grm "$trm" \
     --pca "$n_pca" \
-    --out "$out_pca"
+    --out "$out_pca" \
+	--autosome-num 29 \
+	--autosome 
