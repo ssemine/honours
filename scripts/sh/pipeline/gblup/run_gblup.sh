@@ -136,8 +136,10 @@ covar_file="$results_dir/covar.covar"
 
 # PLINK QC
 plink --bfile "$bfile" --mind "$indi_missingness" --make-bed --out "$bfile.step1" --chr-set 29
-plink --bfile "$bfile.step1" --check-sex --out "$bfile.step2" --chr-set 29
-
+#plink --bfile "$bfile.step1" --check-sex --out "$bfile.step2" --chr-set 29
+cp "$bfile.step1.bed" "$bfile.step2.bed"
+cp "$bfile.step1.bim" "$bfile.step2.bim"
+cp "$bfile.step1.fam" "$bfile.step2.fam"
 if [ "$use_hetzyg" = true ]; then
     plink --bfile "$bfile.step2" --het --out "$hetzyg" --chr-set 29 # filter out with awk
 
