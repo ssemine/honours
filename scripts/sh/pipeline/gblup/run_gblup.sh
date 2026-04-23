@@ -135,11 +135,11 @@ qcovar_file="$results_dir/qcovar.qcovar"
 covar_file="$results_dir/covar.covar"
 
 # PLINK QC
-plink --bfile "$bfile" --mind "$indi_missingness" --make-bed --out "$bfile.step1"
-plink --bfile "$bfile.step1" --check-sex --out "$bfile.step2"
+plink --bfile "$bfile" --mind "$indi_missingness" --make-bed --out "$bfile.step1" --chr-set 29
+plink --bfile "$bfile.step1" --check-sex --out "$bfile.step2" --chr-set 29
 
 if [ "$use_hetzyg" = true ]; then
-    plink --bfile "$bfile.step2" --het --out "$hetzyg" # filter out with awk
+    plink --bfile "$bfile.step2" --het --out "$hetzyg" --chr-set 29 # filter out with awk
 
     gawk '
     NR > 1 {
@@ -162,16 +162,16 @@ if [ "$use_hetzyg" = true ]; then
             }
         }
     }' "$hetzyg" > "$hetzyg.out"
-    plink --bfile "$bfile.step2" --remove "$hetzyg.out" --make-bed --out "$bfile.step3"
+    plink --bfile "$bfile.step2" --remove "$hetzyg.out" --make-bed --out "$bfile.step3" --chr-set 29
 else
     cp "$bfile.step2.bed" "$bfile.step3.bed"
     cp "$bfile.step2.bim" "$bfile.step3.bim"
     cp "$bfile.step2.fam" "$bfile.step3.fam"
 fi
 
-plink --bfile "$bfile.step3" --maf "$maf_thresh" --make-bed --out "$bfile.step4"
-plink --bfile "$bfile.step4" --geno "$snp_missingness" --make-bed --out "$bfile.step5"
-plink --bfile "$bfile.step5" --hwe "$hwe_thresh" --make-bed --out "$bfile.step6"
+plink --bfile "$bfile.step3" --maf "$maf_thresh" --make-bed --out "$bfile.step4" --chr-set 29
+plink --bfile "$bfile.step4" --geno "$snp_missingness" --make-bed --out "$bfile.step5" --chr-set 29
+plink --bfile "$bfile.step5" --hwe "$hwe_thresh" --make-bed --out "$bfile.step6" --chr-set 29
 
 bfile="$bfile.step6"
 # run PCA on $bfile.step6
@@ -180,21 +180,24 @@ bfile="$bfile.step6"
 #fi
 
 # GRM Assembly
-gcta64 --bfile "$bfile" --autosome --make-grm --out "$grm"
+gcta64 --bfile "$bfile" --autosome --make-grm --out "$grm" --autosome-num 29
 if [ "$grm_cutoff" = "nocut" ]; then
     gcta64 \
         --bfile "$bfile" \
         --make-grm \
-        --out "$results_dir/grm"
+        --out "$results_dir/grm" \
+        --autosome-num 29
 else
     gcta64 \
         --bfile "$bfile" \
         --make-grm \
-        --out "$results_dir/grm_uncut"
+        --out "$results_dir/grm_uncut" \
+        --autosome-num 29
     gcta64 \
         --grm "$results_dir/grm_uncut" \
         --grm-cutoff "$grm_cutoff" \
-        --out "$results_dir/grm"
+        --out "$results_dir/grm" \
+        --autosome-num 29
 fi
 
 # change to gcta or generalise 

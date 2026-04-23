@@ -46,27 +46,31 @@ if [[ -n "$grm_flist" ]]; then
             --covar "$covar_file" \
             --qcovar "$qcovar_file" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     elif [[ -n "$covar_file" ]]; then
         gcta64 \
             --reml \
             --mgrm "$grm_flist" \
             --covar "$covar_file" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     elif [[ -n "$qcovar_file" ]]; then
         gcta64 \
             --reml \
             --mgrm "$grm_flist" \
             --qcovar "$qcovar_file" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     else
         gcta64 \
             --reml \
             --mgrm "$grm_flist" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     fi
 elif [[ -n "$grm" ]]; then
     if [[ -n "$covar_file" && -n "$qcovar_file" ]]; then
@@ -76,14 +80,16 @@ elif [[ -n "$grm" ]]; then
             --covar "$covar_file" \
             --qcovar "$qcovar_file" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     elif [[ -n "$covar_file" ]]; then
         gcta64 \
             --reml \
             --grm "$grm" \
             --covar "$covar_file" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     elif [[ -n "$qcovar_file" ]]; then
         gcta64 \
             --reml \
@@ -96,7 +102,8 @@ elif [[ -n "$grm" ]]; then
             --reml \
             --grm "$grm" \
             --out "$out" \
-            --pheno "$pheno"
+            --pheno "$pheno" \
+            --autosome-num 29
     fi
 else
     exit 1
